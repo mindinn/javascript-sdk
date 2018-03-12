@@ -1,0 +1,32 @@
+{
+  "extends": [
+    "google"
+  ],
+  "rules": {
+    "max-len": ["error", {"code": 120}],
+    "arrow-parens": ["error", "as-needed"],
+    "curly": ["error", "multi"],
+    "comma-dangle": 0,
+    "require-jsdoc": [
+      "error",
+      {
+        "require": {
+          "FunctionDeclaration": false,
+          "MethodDefinition": false,
+          "ClassDeclaration": false,
+          "ArrowFunctionExpression": false,
+          "FunctionExpression": false
+        }
+      }
+    ]
+  },
+  "env": {
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  }
+}
