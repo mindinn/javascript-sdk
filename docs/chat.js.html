@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a><ul class='members'><li data-type='member'><a href="Chat.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="Chat.html#addParticipant">addParticipant</a></li><li data-type='method'><a href="Chat.html#createRoom">createRoom</a></li><li data-type='method'><a href="Chat.html#getCurrentClient">getCurrentClient</a></li><li data-type='method'><a href="Chat.html#getMessagesByRoomId">getMessagesByRoomId</a></li><li data-type='method'><a href="Chat.html#getRooms">getRooms</a></li><li data-type='method'><a href="Chat.html#sendMessageToRoom">sendMessageToRoom</a></li><li data-type='method'><a href="Chat.html#updateRoom">updateRoom</a></li></ul></li><li><a href="Service.html">Service</a><ul class='methods'><li data-type='method'><a href="Service.html#addClient">addClient</a></li><li data-type='method'><a href="Service.html#deleteClient">deleteClient</a></li><li data-type='method'><a href="Service.html#getClient">getClient</a></li><li data-type='method'><a href="Service.html#updateClient">updateClient</a></li><li data-type='method'><a href="Service.html#upsertClient">upsertClient</a></li></ul></li><li><a href="SocketKit.html">SocketKit</a><ul class='members'><li data-type='member'><a href="SocketKit.html#.ConnectionType">ConnectionType</a></li><li data-type='member'><a href="SocketKit.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="SocketKit.html#connect">connect</a></li><li data-type='method'><a href="SocketKit.html#disconnect">disconnect</a></li><li data-type='method'><a href="SocketKit.html#getClient">getClient</a></li><li data-type='method'><a href="SocketKit.html#getInstance">getInstance</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a><ul class='members'><li data-type='member'><a href="Chat.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="Chat.html#addParticipant">addParticipant</a></li><li data-type='method'><a href="Chat.html#clearTyping">clearTyping</a></li><li data-type='method'><a href="Chat.html#createRoom">createRoom</a></li><li data-type='method'><a href="Chat.html#getCurrentClient">getCurrentClient</a></li><li data-type='method'><a href="Chat.html#getMessagesByRoomId">getMessagesByRoomId</a></li><li data-type='method'><a href="Chat.html#getRoomInfo">getRoomInfo</a></li><li data-type='method'><a href="Chat.html#getRooms">getRooms</a></li><li data-type='method'><a href="Chat.html#sendMessageToRoom">sendMessageToRoom</a></li><li data-type='method'><a href="Chat.html#setTyping">setTyping</a></li><li data-type='method'><a href="Chat.html#updateRoom">updateRoom</a></li></ul></li><li><a href="Service.html">Service</a><ul class='methods'><li data-type='method'><a href="Service.html#addClient">addClient</a></li><li data-type='method'><a href="Service.html#deleteClient">deleteClient</a></li><li data-type='method'><a href="Service.html#getClient">getClient</a></li><li data-type='method'><a href="Service.html#updateClient">updateClient</a></li><li data-type='method'><a href="Service.html#upsertClient">upsertClient</a></li></ul></li><li><a href="SocketKit.html">SocketKit</a><ul class='members'><li data-type='member'><a href="SocketKit.html#.ConnectionType">ConnectionType</a></li><li data-type='member'><a href="SocketKit.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="SocketKit.html#connect">connect</a></li><li data-type='method'><a href="SocketKit.html#disconnect">disconnect</a></li><li data-type='method'><a href="SocketKit.html#getClient">getClient</a></li><li data-type='method'><a href="SocketKit.html#getInstance">getInstance</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -63,8 +63,8 @@ class Chat extends EventEmitterExtra {
       this.getCurrentClient();
     });
 
-    this.client.on(Chat.InternalEvent.MESSAGE, message => {
-      this.emit(Chat.Event.MESSAGE_RECEIVED, message.payload);
+    this.client.on(Chat.InternalEvent.ROOM_EVENT, message => {
+      this.emit(Chat.Event.ROOM_EVENT, message.payload);
     });
 
     this.client.on(Chat.InternalEvent.NEW_ROOM_CREATED, message => {
@@ -94,6 +94,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -121,6 +122,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -154,6 +156,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -185,6 +188,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -207,6 +211,45 @@ class Chat extends EventEmitterExtra {
   }
 
   /**
+   * @summary Set typing of current user in a given room.
+   * @param {number} roomId Room id
+   * @return {Promise}
+   */
+  async setTyping(roomId) {
+    if (!roomId)
+      return Promise.reject(new Error(`roomId is required`));
+
+    return this.client
+      .send(Chat.Events.SET_TYPING, {roomId, typing: true});
+  }
+
+  /**
+   * @summary Clear typing of the current user in the room.
+   * @param  {number} roomId Room id
+   * @return {Promise}
+   */
+  async clearTyping(roomId) {
+    if (!roomId)
+      return Promise.reject(new Error(`roomId is required`));
+
+    return this.client
+      .send(Chat.Events.SET_TYPING, {roomId, typing: false});
+  }
+
+  /**
+   * @summary Gets room information by room id.
+   * @param {!number} roomId Room id.
+   * @return {Promise}
+   */
+  async getRoomInfo(roomId) {
+    if (!roomId)
+      return Promise.reject(new Error(`roomId is required`));
+
+    return this.client
+      .send(Chat.Event.GET_ROOM_INFO, {roomId});
+  }
+
+  /**
    * @summary Add a participant to a room
    *
    * @param {!Number} roomId Room id
@@ -219,6 +262,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -253,6 +297,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -284,6 +329,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -313,7 +359,7 @@ class Chat extends EventEmitterExtra {
  * @ignore
  */
 Chat.InternalEvent = {
-  MESSAGE: 'message',
+  ROOM_EVENT: 'room_event',
   NEW_ROOM_CREATED: 'new_room_created',
   JOINED_TO_ROOM: 'joined_to_room',
   ROOM_UPDATED: 'room_updated',
@@ -336,7 +382,10 @@ Chat.Event = {
   JOINED_TO_ROOM: 'joined_to_room',
   ROOM_UPDATED: 'room_updated',
   MESSAGE_RECEIVED: 'message_received',
-  CLIENT_UPDATED: 'client_updated'
+  CLIENT_UPDATED: 'client_updated',
+  ROOM_EVENT: 'room_event',
+  GET_ROOM_INFO: 'get_room_info',
+  SET_TYPING: 'set_typing'
 };
 
 exports.Chat = Chat;
@@ -353,7 +402,7 @@ exports.Event = Chat.Event;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Mar 12 2018 19:39:10 GMT+0300 (+03) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Mar 26 2018 14:52:16 GMT+0300 (+03) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

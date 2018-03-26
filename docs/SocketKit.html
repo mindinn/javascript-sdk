@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a><ul class='members'><li data-type='member'><a href="Chat.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="Chat.html#addParticipant">addParticipant</a></li><li data-type='method'><a href="Chat.html#createRoom">createRoom</a></li><li data-type='method'><a href="Chat.html#getCurrentClient">getCurrentClient</a></li><li data-type='method'><a href="Chat.html#getMessagesByRoomId">getMessagesByRoomId</a></li><li data-type='method'><a href="Chat.html#getRooms">getRooms</a></li><li data-type='method'><a href="Chat.html#sendMessageToRoom">sendMessageToRoom</a></li><li data-type='method'><a href="Chat.html#updateRoom">updateRoom</a></li></ul></li><li><a href="Service.html">Service</a><ul class='methods'><li data-type='method'><a href="Service.html#addClient">addClient</a></li><li data-type='method'><a href="Service.html#deleteClient">deleteClient</a></li><li data-type='method'><a href="Service.html#getClient">getClient</a></li><li data-type='method'><a href="Service.html#updateClient">updateClient</a></li><li data-type='method'><a href="Service.html#upsertClient">upsertClient</a></li></ul></li><li><a href="SocketKit.html">SocketKit</a><ul class='members'><li data-type='member'><a href="SocketKit.html#.ConnectionType">ConnectionType</a></li><li data-type='member'><a href="SocketKit.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="SocketKit.html#connect">connect</a></li><li data-type='method'><a href="SocketKit.html#disconnect">disconnect</a></li><li data-type='method'><a href="SocketKit.html#getClient">getClient</a></li><li data-type='method'><a href="SocketKit.html#getInstance">getInstance</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a><ul class='members'><li data-type='member'><a href="Chat.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="Chat.html#addParticipant">addParticipant</a></li><li data-type='method'><a href="Chat.html#clearTyping">clearTyping</a></li><li data-type='method'><a href="Chat.html#createRoom">createRoom</a></li><li data-type='method'><a href="Chat.html#getCurrentClient">getCurrentClient</a></li><li data-type='method'><a href="Chat.html#getMessagesByRoomId">getMessagesByRoomId</a></li><li data-type='method'><a href="Chat.html#getRoomInfo">getRoomInfo</a></li><li data-type='method'><a href="Chat.html#getRooms">getRooms</a></li><li data-type='method'><a href="Chat.html#sendMessageToRoom">sendMessageToRoom</a></li><li data-type='method'><a href="Chat.html#setTyping">setTyping</a></li><li data-type='method'><a href="Chat.html#updateRoom">updateRoom</a></li></ul></li><li><a href="Service.html">Service</a><ul class='methods'><li data-type='method'><a href="Service.html#addClient">addClient</a></li><li data-type='method'><a href="Service.html#deleteClient">deleteClient</a></li><li data-type='method'><a href="Service.html#getClient">getClient</a></li><li data-type='method'><a href="Service.html#updateClient">updateClient</a></li><li data-type='method'><a href="Service.html#upsertClient">upsertClient</a></li></ul></li><li><a href="SocketKit.html">SocketKit</a><ul class='members'><li data-type='member'><a href="SocketKit.html#.ConnectionType">ConnectionType</a></li><li data-type='member'><a href="SocketKit.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="SocketKit.html#connect">connect</a></li><li data-type='method'><a href="SocketKit.html#disconnect">disconnect</a></li><li data-type='method'><a href="SocketKit.html#getClient">getClient</a></li><li data-type='method'><a href="SocketKit.html#getInstance">getInstance</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -162,6 +162,29 @@
 
         <tr>
             
+                <td class="name"><code>options.accountId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Account Id</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>options.type</code></td>
             
 
@@ -240,7 +263,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line160">line 160</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line167">line 167</a>
     </li></ul></dd>
     
 
@@ -399,7 +422,7 @@ const service = new SocketKit({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line135">line 135</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line142">line 142</a>
     </li></ul></dd>
     
 
@@ -585,7 +608,7 @@ instance.on(SocketKit.Event.ERROR, (error) => console.info('Error occurred', err
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line39">line 39</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line42">line 42</a>
     </li></ul></dd>
     
 
@@ -636,6 +659,7 @@ instance.on(SocketKit.Event.ERROR, (error) => console.info('Error occurred', err
     
     <pre class="prettyprint"><code>const instance = new SocketKit({
   token: 'abc',
+  accountId: 1,
   type: SocketKit.ConnectionType.CLIENT
 });
 
@@ -698,7 +722,7 @@ instance.on(SocketKit.Event.DISCONNECTED, () => console.info('Disconnected'));</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line76">line 76</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line83">line 83</a>
     </li></ul></dd>
     
 
@@ -795,7 +819,7 @@ instance.on(SocketKit.Event.DISCONNECTED, () => console.info('Disconnected'));</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line106">line 106</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line113">line 113</a>
     </li></ul></dd>
     
 
@@ -899,7 +923,7 @@ instance.on(SocketKit.Event.DISCONNECTED, () => console.info('Disconnected'));</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line114">line 114</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line121">line 121</a>
     </li></ul></dd>
     
 
@@ -1004,7 +1028,7 @@ instance.on(SocketKit.Event.DISCONNECTED, () => console.info('Disconnected'));</
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Mar 12 2018 19:39:10 GMT+0300 (+03) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Mar 26 2018 14:52:16 GMT+0300 (+03) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

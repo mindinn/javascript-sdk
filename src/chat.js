@@ -24,8 +24,8 @@ class Chat extends EventEmitterExtra {
       this.getCurrentClient();
     });
 
-    this.client.on(Chat.InternalEvent.MESSAGE, message => {
-      this.emit(Chat.Event.MESSAGE_RECEIVED, message.payload);
+    this.client.on(Chat.InternalEvent.ROOM_EVENT, message => {
+      this.emit(Chat.Event.ROOM_EVENT, message.payload);
     });
 
     this.client.on(Chat.InternalEvent.NEW_ROOM_CREATED, message => {
@@ -55,6 +55,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -82,6 +83,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -115,6 +117,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -146,6 +149,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -168,6 +172,19 @@ class Chat extends EventEmitterExtra {
   }
 
   /**
+   * @summary Gets room information by room id.
+   * @param {!number} roomId Room id.
+   * @return {Promise}
+   */
+  async getRoomInfo(roomId) {
+    if (!roomId)
+      return Promise.reject(new Error(`roomId is required`));
+
+    return this.client
+      .send(Chat.Event.GET_ROOM_INFO, {roomId});
+  }
+
+  /**
    * @summary Add a participant to a room
    *
    * @param {!Number} roomId Room id
@@ -180,6 +197,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -214,6 +232,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -245,6 +264,7 @@ class Chat extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: Socketkit.ConnectionType.CLIENT
    * });
    *
@@ -274,7 +294,7 @@ class Chat extends EventEmitterExtra {
  * @ignore
  */
 Chat.InternalEvent = {
-  MESSAGE: 'message',
+  ROOM_EVENT: 'room_event',
   NEW_ROOM_CREATED: 'new_room_created',
   JOINED_TO_ROOM: 'joined_to_room',
   ROOM_UPDATED: 'room_updated',
@@ -297,7 +317,10 @@ Chat.Event = {
   JOINED_TO_ROOM: 'joined_to_room',
   ROOM_UPDATED: 'room_updated',
   MESSAGE_RECEIVED: 'message_received',
-  CLIENT_UPDATED: 'client_updated'
+  CLIENT_UPDATED: 'client_updated',
+  ROOM_EVENT: 'room_event',
+  GET_ROOM_INFO: 'get_room_info',
+  SET_TYPING: 'set_typing'
 };
 
 exports.Chat = Chat;

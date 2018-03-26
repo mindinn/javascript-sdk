@@ -9,12 +9,14 @@ class SocketKit extends EventEmitterExtra {
    * @class  SocketKit
    * @extends {EventEmitterExtra}
    * @param  {!string} options.token Access token
+   * @param  {!number} options.accountId Account Id
    * @param  {!SocketKit.ConnectionType} options.type
    */
-  constructor({token, type}) {
+  constructor({token, accountId, type} = {}) {
     super();
 
     this.token = token;
+    this.accountId = accountId;
     this.type = type;
 
     this.client = null;
@@ -28,6 +30,7 @@ class SocketKit extends EventEmitterExtra {
    * @example
    * const instance = new SocketKit({
    *   token: 'abc',
+   *   accountId: 1,
    *   type: SocketKit.ConnectionType.CLIENT
    * });
    *
@@ -40,7 +43,11 @@ class SocketKit extends EventEmitterExtra {
     if (this.isConnected)
       return console.warn('Client is already connected');
 
-    const payload = {token: this.token, type: this.type};
+    const payload = {
+      accountId: this.accountId,
+      token: this.token,
+      type: this.type
+    };
 
     this.client = new LineClient('ws://localhost:6001', {handshake: {payload}});
 
