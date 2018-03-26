@@ -1,4 +1,4 @@
-const LineClient = require('line-socket/client-web');
+const LineClient = require('line-socket/src/client/client-web');
 const EventEmitterExtra = require('event-emitter-extra');
 
 

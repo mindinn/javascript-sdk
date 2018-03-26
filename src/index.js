@@ -168,7 +168,7 @@ SocketKit.ConnectionType = {
   SERVICE: 'service'
 };
 
-SocketKit.LineClient = require('line-socket/client-web');
+SocketKit.LineClient = require('line-socket/src/client/client-web');
 
 exports.SocketKit = SocketKit;
 exports.ConnectionType = SocketKit.ConnectionType;
