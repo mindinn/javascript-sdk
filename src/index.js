@@ -1,4 +1,8 @@
-const LineClient = require('line-socket/client-web');
+const {isNode} = require('./lib/utilities');
+
+const LineClient = isNode() ?
+  require('line-socket/client-node') :
+  require('line-socket/client-web');
 const EventEmitterExtra = require('event-emitter-extra');
 const {Chat} = require('./chat');
 const {Service} = require('./service');
