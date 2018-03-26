@@ -90,17 +90,17 @@ class SocketKit extends EventEmitterExtra {
    * @private
    */
   bindEvents() {
-    this.client.on(LineClient.Event.CONNECTED, () => {
+    this.client.on(SocketKit.LineClient.Event.CONNECTED, () => {
       this.isConnected = true;
       this.emit(SocketKit.Event.CONNECTED);
     });
 
-    this.client.on(LineClient.Event.DISCONNECTED, (code, reason) => {
+    this.client.on(SocketKit.LineClient.Event.DISCONNECTED, (code, reason) => {
       this.isConnected = false;
       this.emit(SocketKit.Event.DISCONNECTED, {code, reason});
     });
 
-    this.client.on(LineClient.Event.ERROR, error => {
+    this.client.on(SocketKit.LineClient.Event.ERROR, error => {
       this.emit(SocketKit.Event.ERROR, error);
     });
   }
