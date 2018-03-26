@@ -1,8 +1,3 @@
-const {isNode} = require('./lib/utilities');
-
-const LineClient = isNode() ?
-  require('line-socket/client-node') :
-  require('line-socket/client-web');
 const EventEmitterExtra = require('event-emitter-extra');
 const {Chat} = require('./chat');
 const {Service} = require('./service');
@@ -53,7 +48,7 @@ class SocketKit extends EventEmitterExtra {
       type: this.type
     };
 
-    this.client = new LineClient('wss://ws.socketkit.com', {handshake: {payload}});
+    this.client = new SocketKit.LineClient('wss://ws.socketkit.com', {handshake: {payload}});
 
     this.bindEvents();
 
@@ -172,6 +167,8 @@ SocketKit.ConnectionType = {
   CLIENT: 'client',
   SERVICE: 'service'
 };
+
+SocketKit.LineClient = require('line-socket/client-web');
 
 exports.SocketKit = SocketKit;
 exports.ConnectionType = SocketKit.ConnectionType;
