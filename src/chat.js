@@ -172,6 +172,32 @@ class Chat extends EventEmitterExtra {
   }
 
   /**
+   * @summary Set typing of current user in a given room.
+   * @param {number} roomId Room id
+   * @return {Promise}
+   */
+  async setTyping(roomId) {
+    if (!roomId)
+      return Promise.reject(new Error(`roomId is required`));
+
+    return this.client
+      .send(Chat.Events.SET_TYPING, {roomId, typing: true});
+  }
+
+  /**
+   * @summary Clear typing of the current user in the room.
+   * @param  {number} roomId Room id
+   * @return {Promise}
+   */
+  async clearTyping(roomId) {
+    if (!roomId)
+      return Promise.reject(new Error(`roomId is required`));
+
+    return this.client
+      .send(Chat.Events.SET_TYPING, {roomId, typing: false});
+  }
+
+  /**
    * @summary Gets room information by room id.
    * @param {!number} roomId Room id.
    * @return {Promise}
