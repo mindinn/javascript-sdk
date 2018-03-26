@@ -49,7 +49,7 @@ class SocketKit extends EventEmitterExtra {
       type: this.type
     };
 
-    this.client = new LineClient('ws://localhost:6001', {handshake: {payload}});
+    this.client = new LineClient('wss://ws.socketkit.com', {handshake: {payload}});
 
     this.bindEvents();
 
