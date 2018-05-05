@@ -235,14 +235,15 @@ class Chat extends EventEmitterExtra {
    *     .addParticipant(1, 15, {joinedDate: new Date()})
    * });
    */
-  async addParticipant(roomId, targetClientId, properties = {}) {
+  async addParticipant(roomId, targetUniqueClientKey, properties = {}) {
     if (!roomId)
       return Promise.reject(new Error(`roomId is required`));
 
-    if (!targetClientId)
-      return Promise.reject(new Error(`targetClientId is required`));
+    if (!targetUniqueClientKey)
+      return Promise.reject(new Error(`targetUniqueClientKey is required`));
 
-    return this.client.send(Chat.InternalEvent.ADD_PARTICIPANT, {roomId, targetClientId, properties});
+    return this.client.send(Chat.InternalEvent.ADD_PARTICIPANT, {roomId, targetUniqueClientKey, properties});
+  }
   }
 
   /**
