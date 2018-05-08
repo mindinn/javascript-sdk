@@ -213,9 +213,10 @@ class Chat extends EventEmitterExtra {
   /**
    * @summary Add a participant to a room
    *
-   * @param {!Number} roomId Room id
-   * @param {!Number} targetClientId Target client id
-   * @param {Object} [properties={}] properties Additional properties for the participant
+   * @param {!Number} payload.roomId Room id
+   * @param {!Number} payload.targetUniqueClientKey Target client id
+   * @param {Boolean} payload.isAllowedToPost Optional PostMessage priviledge of the participant
+   * @param {Object} [properties={}] payload.properties Additional properties for the participant
    *
    * @return {Promise}
    *
@@ -232,25 +233,75 @@ class Chat extends EventEmitterExtra {
    * socketkit.on(SocketKit.Event.CONNECTED, () => {
    *   socketkit
    *     .getInstance()
-   *     .addParticipant(1, 15, {joinedDate: new Date()})
+   *     .addParticipant({
+   *       roomId: 1,
+   *       targetUniqueClientKey: 15,
+   *       isAllowedToPost: false,
+   *       properties: {joinedDate: new Date()}
+   *     })
    * });
    */
-  async addParticipant(roomId, targetClientId, properties = {}) {
+  async addParticipant({roomId, targetUniqueClientKey, isAllowedToPost, properties = {}} = {}) {
     if (!roomId)
       return Promise.reject(new Error(`roomId is required`));
 
-    if (!targetClientId)
-      return Promise.reject(new Error(`targetClientId is required`));
+    if (!targetUniqueClientKey)
+      return Promise.reject(new Error(`targetUniqueClientKey is required`));
 
-    return this.client.send(Chat.InternalEvent.ADD_PARTICIPANT, {roomId, targetClientId, properties});
+    const participant = {roomId, targetUniqueClientKey, isAllowedToPost, properties};
+
+    return this.client.send(Chat.InternalEvent.ADD_PARTICIPANT, participant);
+  }
+
+  /**
+   * @summary Update a participant of a room
+   *
+   * @param {!Number} payload.roomId Room id
+   * @param {!Number} payload.targetClientId Target client id
+   * @param {Boolean} payload.isAllowedToPost PostMessage priviledge of the participant
+   * @param {Object} payload.properties Additional properties for the participant
+   *
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   token: 'abc',
+   *   accountId: 1,
+   *   type: Socketkit.ConnectionType.CLIENT
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .getInstance()
+   *     .updateParticipant({
+   *       roomId: 1,
+   *       targetUniqueClientKey: 15,
+   *       isAllowedToPost: true
+   *     });
+   * });
+   */
+  async updateParticipant({roomId, targetUniqueClientKey, isAllowedToPost, properties} = {}) {
+    if (!roomId)
+      return Promise.reject(new Error(`roomId is required`));
+
+    if (!targetUniqueClientKey)
+      return Promise.reject(new Error(`targetUniqueClientKey is required`));
+
+    const participant = {roomId, targetUniqueClientKey, isAllowedToPost, properties};
+
+    return this.client.send(Chat.InternalEvent.UPDATE_PARTICIPANT, participant);
   }
 
   /**
    * @summary Create a room
    *
-   * @param  {!string}  title Title of the room
-   * @param  {Boolean} [private_=false] private_ If the room is private or not.
-   * @param  {Object}  properties Additional properties for the room
+   * @param  {!string} payload.title Title of the room
+   * @param  {Boolean} [isPrivate=false] payload.isPrivate If the room is private or not
+   * @param  {Boolean} [allowPostsByDefault=true] payload.allowPostsByDefault Can participants post messages to room or not right away
+   * @param  {Object} [properties={}] payload.properties Additional properties for the room
    *
    * @return {Promise}
    *
@@ -267,22 +318,29 @@ class Chat extends EventEmitterExtra {
    * socketkit.on(SocketKit.Event.CONNECTED, () => {
    *   socketkit
    *     .getInstance()
-   *     .createRoom('New room', true, {link: 'https://socketkit.com'})
+   *     .createRoom({
+   *       title: 'Awesome Announcement Room',
+   *       isPrivate: true,
+   *       allowPostsByDefault: false,
+   *       properties: {awesomeLink: 'https://socketkit.com'}
+   *     });
    * });
    */
-  async createRoom(title, private_ = false, properties = {}) {
+  async createRoom({title, isPrivate = false, allowPostsByDefault = true, properties = {}} = {}) {
     if (!title)
       return Promise.reject(new Error(`title is required`));
 
-    return this.client.send(Chat.InternalEvent.CREATE_ROOM, {title, private: private_, properties});
+    const room = {title, private: isPrivate, allowPostsByDefault, properties};
+
+    return this.client.send(Chat.InternalEvent.CREATE_ROOM, room);
   }
 
   /**
    * @summary Update a room
    *
-   * @param  {!Number} roomId Room id
-   * @param  {!string} title New title of the room
-   * @param  {Object} properties Additional properties
+   * @param  {!Number} payload.roomId Room id
+   * @param  {!string} payload.title New title of the room
+   * @param  {Object} [properties={}] payload.properties Additional properties
    *
    * @return {Promise}
    *
@@ -299,10 +357,14 @@ class Chat extends EventEmitterExtra {
    * socketkit.on(SocketKit.Event.CONNECTED, () => {
    *   socketkit
    *     .getInstance()
-   *     .updateRoom(1, 'Edited title', {link: 'https://socketkit.com'})
+   *     .updateRoom({
+   *       roomId: 1,
+   *       title: 'Edited title',
+   *       properties: {link: 'https://socketkit.com'}
+   *     });
    * });
    */
-  async updateRoom(roomId, title, properties = {}) {
+  async updateRoom({roomId, title, properties = {}} = {}) {
     if (!roomId)
       return Promise.reject(new Error(`roomId is required`));
 
@@ -330,6 +392,7 @@ Chat.InternalEvent = {
   SEND_MESSAGE_TO_ROOM: 'send_message_to_room',
   CREATE_ROOM: 'create_room',
   ADD_PARTICIPANT: 'add_participant',
+  UPDATE_PARTICIPANT: 'update_participant',
   UPDATE_ROOM: 'update_room'
 };
 
