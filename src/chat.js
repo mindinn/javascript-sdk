@@ -141,8 +141,11 @@ class Chat extends EventEmitterExtra {
   /**
    * @summary Send a message to room
    *
-   * @param  {!Number} roomId Room id
-   * @param  {!text} text Message to be sent to the room
+   * @param  {!Object} payload Parameters for the method
+   * @param  {!Number} payload.roomId Room id
+   * @param  {!text} payload.text Message to be sent to the room
+   * @param  {Object} payload.properties Message properties
+   * @param  {Array<{reference: !String, type: String, name: String, size: Number, length: Number}>} payload.properties.attachments File Attachments sent with the message
    * @return {Promise}
    *
    * @example
@@ -161,14 +164,14 @@ class Chat extends EventEmitterExtra {
    *     .sendMessageToRoom(1, 'Hello world');
    * });
    */
-  async sendMessageToRoom(roomId, text) {
+  async sendMessageToRoom({roomId, text, properties} = {}) {
     if (!roomId)
       return Promise.reject(new Error(`roomId is required`));
 
     if (!text)
       return Promise.reject(new Error(`text is required`));
 
-    return this.client.send(Chat.InternalEvent.SEND_MESSAGE_TO_ROOM, {roomId, text});
+    return this.client.send(Chat.InternalEvent.SEND_MESSAGE_TO_ROOM, {roomId, text, properties});
   }
 
   /**
@@ -213,6 +216,7 @@ class Chat extends EventEmitterExtra {
   /**
    * @summary Add a participant to a room
    *
+   * @param {!Object} payload Parameters for the method
    * @param {!Number} payload.roomId Room id
    * @param {!Number} payload.targetUniqueClientKey Target client id
    * @param {Boolean} payload.isAllowedToPost Optional PostMessage priviledge of the participant
@@ -256,6 +260,7 @@ class Chat extends EventEmitterExtra {
   /**
    * @summary Update a participant of a room
    *
+   * @param {!Object} payload Parameters for the method
    * @param {!Number} payload.roomId Room id
    * @param {!Number} payload.targetClientId Target client id
    * @param {Boolean} payload.isAllowedToPost PostMessage priviledge of the participant
@@ -298,6 +303,7 @@ class Chat extends EventEmitterExtra {
   /**
    * @summary Create a room
    *
+   * @param  {!Object} payload Parameters for the method
    * @param  {!string} payload.title Title of the room
    * @param  {Boolean} [isPrivate=false] payload.isPrivate If the room is private or not
    * @param  {Boolean} [allowPostsByDefault=true] payload.allowPostsByDefault Can participants post messages to room or not right away
@@ -338,6 +344,7 @@ class Chat extends EventEmitterExtra {
   /**
    * @summary Update a room
    *
+   * @param  {!Object} payload Parameters for the method
    * @param  {!Number} payload.roomId Room id
    * @param  {!string} payload.title New title of the room
    * @param  {Object} [properties={}] payload.properties Additional properties

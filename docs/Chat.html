@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a><ul class='members'><li data-type='member'><a href="Chat.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="Chat.html#addParticipant">addParticipant</a></li><li data-type='method'><a href="Chat.html#clearTyping">clearTyping</a></li><li data-type='method'><a href="Chat.html#createRoom">createRoom</a></li><li data-type='method'><a href="Chat.html#getCurrentClient">getCurrentClient</a></li><li data-type='method'><a href="Chat.html#getMessagesByRoomId">getMessagesByRoomId</a></li><li data-type='method'><a href="Chat.html#getRoomInfo">getRoomInfo</a></li><li data-type='method'><a href="Chat.html#getRooms">getRooms</a></li><li data-type='method'><a href="Chat.html#sendMessageToRoom">sendMessageToRoom</a></li><li data-type='method'><a href="Chat.html#setTyping">setTyping</a></li><li data-type='method'><a href="Chat.html#updateRoom">updateRoom</a></li></ul></li><li><a href="Service.html">Service</a><ul class='methods'><li data-type='method'><a href="Service.html#addClient">addClient</a></li><li data-type='method'><a href="Service.html#deleteClient">deleteClient</a></li><li data-type='method'><a href="Service.html#getClient">getClient</a></li><li data-type='method'><a href="Service.html#updateClient">updateClient</a></li><li data-type='method'><a href="Service.html#upsertClient">upsertClient</a></li></ul></li><li><a href="SocketKit.html">SocketKit</a><ul class='members'><li data-type='member'><a href="SocketKit.html#.ConnectionType">ConnectionType</a></li><li data-type='member'><a href="SocketKit.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="SocketKit.html#connect">connect</a></li><li data-type='method'><a href="SocketKit.html#disconnect">disconnect</a></li><li data-type='method'><a href="SocketKit.html#getClient">getClient</a></li><li data-type='method'><a href="SocketKit.html#getInstance">getInstance</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a><ul class='members'><li data-type='member'><a href="Chat.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="Chat.html#addParticipant">addParticipant</a></li><li data-type='method'><a href="Chat.html#clearTyping">clearTyping</a></li><li data-type='method'><a href="Chat.html#createRoom">createRoom</a></li><li data-type='method'><a href="Chat.html#getCurrentClient">getCurrentClient</a></li><li data-type='method'><a href="Chat.html#getMessagesByRoomId">getMessagesByRoomId</a></li><li data-type='method'><a href="Chat.html#getRoomInfo">getRoomInfo</a></li><li data-type='method'><a href="Chat.html#getRooms">getRooms</a></li><li data-type='method'><a href="Chat.html#sendMessageToRoom">sendMessageToRoom</a></li><li data-type='method'><a href="Chat.html#setTyping">setTyping</a></li><li data-type='method'><a href="Chat.html#updateParticipant">updateParticipant</a></li><li data-type='method'><a href="Chat.html#updateRoom">updateRoom</a></li></ul></li><li><a href="Service.html">Service</a><ul class='methods'><li data-type='method'><a href="Service.html#addClient">addClient</a></li><li data-type='method'><a href="Service.html#deleteClient">deleteClient</a></li><li data-type='method'><a href="Service.html#getClient">getClient</a></li><li data-type='method'><a href="Service.html#updateClient">updateClient</a></li><li data-type='method'><a href="Service.html#upsertClient">upsertClient</a></li></ul></li><li><a href="SocketKit.html">SocketKit</a><ul class='members'><li data-type='member'><a href="SocketKit.html#.ConnectionType">ConnectionType</a></li><li data-type='member'><a href="SocketKit.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="SocketKit.html#connect">connect</a></li><li data-type='method'><a href="SocketKit.html#disconnect">disconnect</a></li><li data-type='method'><a href="SocketKit.html#getClient">getClient</a></li><li data-type='method'><a href="SocketKit.html#getInstance">getInstance</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -206,7 +206,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line341">line 341</a>
+        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line411">line 411</a>
     </li></ul></dd>
     
 
@@ -486,7 +486,7 @@
 
     
 
-    <h4 class="name" id="addParticipant"><span class="type-signature">(async) </span>addParticipant<span class="signature">(roomId<span class="signature-attributes">non-null</span>, targetClientId<span class="signature-attributes">non-null</span>, properties<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="addParticipant"><span class="type-signature">(async) </span>addParticipant<span class="signature">(payload<span class="signature-attributes">non-null</span>, properties<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
     <p class="summary"><p>Add a participant to a room</p></p>
@@ -500,7 +500,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line238">line 238</a>
+        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line248">line 248</a>
     </li></ul></dd>
     
 
@@ -560,7 +560,12 @@ socketkit.connect();
 socketkit.on(SocketKit.Event.CONNECTED, () => {
   socketkit
     .getInstance()
-    .addParticipant(1, 15, {joinedDate: new Date()})
+    .addParticipant({
+      roomId: 1,
+      targetUniqueClientKey: 15,
+      isAllowedToPost: false,
+      properties: {joinedDate: new Date()}
+    })
 });</code></pre>
 
 
@@ -595,6 +600,60 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
 
         <tr>
             
+                <td class="name"><code>payload</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Parameters for the method</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
                 <td class="name"><code>roomId</code></td>
             
 
@@ -608,19 +667,7 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
             </td>
 
             
-                <td class="attributes">
-                
 
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
             
 
             <td class="description last"><p>Room id</p></td>
@@ -630,7 +677,7 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
 
         <tr>
             
-                <td class="name"><code>targetClientId</code></td>
+                <td class="name"><code>targetUniqueClientKey</code></td>
             
 
             <td class="type">
@@ -643,22 +690,40 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
             </td>
 
             
-                <td class="attributes">
-                
 
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
             
 
             <td class="description last"><p>Target client id</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isAllowedToPost</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional PostMessage priviledge of the participant</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -697,7 +762,7 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
                 </td>
             
 
-            <td class="description last"><p>properties Additional properties for the participant</p></td>
+            <td class="description last"><p>payload.properties Additional properties for the participant</p></td>
         </tr>
 
     
@@ -756,7 +821,7 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line192">line 192</a>
+        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line195">line 195</a>
     </li></ul></dd>
     
 
@@ -891,7 +956,7 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
 
     
 
-    <h4 class="name" id="createRoom"><span class="type-signature">(async) </span>createRoom<span class="signature">(title<span class="signature-attributes">non-null</span>, private_<span class="signature-attributes">opt</span>, properties)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="createRoom"><span class="type-signature">(async) </span>createRoom<span class="signature">(payload<span class="signature-attributes">non-null</span>, isPrivate<span class="signature-attributes">opt</span>, allowPostsByDefault<span class="signature-attributes">opt</span>, properties<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
     <p class="summary"><p>Create a room</p></p>
@@ -905,7 +970,7 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line273">line 273</a>
+        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line335">line 335</a>
     </li></ul></dd>
     
 
@@ -965,7 +1030,12 @@ socketkit.connect();
 socketkit.on(SocketKit.Event.CONNECTED, () => {
   socketkit
     .getInstance()
-    .createRoom('New room', true, {link: 'https://socketkit.com'})
+    .createRoom({
+      title: 'Awesome Announcement Room',
+      isPrivate: true,
+      allowPostsByDefault: false,
+      properties: {awesomeLink: 'https://socketkit.com'}
+    });
 });</code></pre>
 
 
@@ -1000,13 +1070,13 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
 
         <tr>
             
-                <td class="name"><code>title</code></td>
+                <td class="name"><code>payload</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Object</span>
 
 
             
@@ -1028,14 +1098,63 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
                 </td>
             
 
+            <td class="description last"><p>Parameters for the method</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
             <td class="description last"><p>Title of the room</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>private_</code></td>
+                <td class="name"><code>isPrivate</code></td>
             
 
             <td class="type">
@@ -1067,7 +1186,46 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
                 </td>
             
 
-            <td class="description last"><p>private_ If the room is private or not.</p></td>
+            <td class="description last"><p>payload.isPrivate If the room is private or not</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>allowPostsByDefault</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>true</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>payload.allowPostsByDefault Can participants post messages to room or not right away</p></td>
         </tr>
 
     
@@ -1089,6 +1247,8 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
             
                 <td class="attributes">
                 
+                    &lt;optional><br>
+                
 
                 
 
@@ -1099,10 +1259,12 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
             
                 <td class="default">
                 
+                    <code>{}</code>
+                
                 </td>
             
 
-            <td class="description last"><p>Additional properties for the room</p></td>
+            <td class="description last"><p>payload.properties Additional properties for the room</p></td>
         </tr>
 
     
@@ -1612,7 +1774,7 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line205">line 205</a>
+        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line208">line 208</a>
     </li></ul></dd>
     
 
@@ -2047,7 +2209,7 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
 
     
 
-    <h4 class="name" id="sendMessageToRoom"><span class="type-signature">(async) </span>sendMessageToRoom<span class="signature">(roomId<span class="signature-attributes">non-null</span>, text<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="sendMessageToRoom"><span class="type-signature">(async) </span>sendMessageToRoom<span class="signature">(payload<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
     <p class="summary"><p>Send a message to room</p></p>
@@ -2061,7 +2223,7 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line164">line 164</a>
+        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line167">line 167</a>
     </li></ul></dd>
     
 
@@ -2152,6 +2314,48 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
 
         <tr>
             
+                <td class="name"><code>payload</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters for the method</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
                 <td class="name"><code>roomId</code></td>
             
 
@@ -2192,6 +2396,85 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
             
 
             <td class="description last"><p>Message to be sent to the room</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>properties</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Message properties</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>attachments</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;{reference: !String, type: String, name: String, size: Number, length: Number}></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>File Attachments sent with the message</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -2250,7 +2533,7 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line179">line 179</a>
+        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line182">line 182</a>
     </li></ul></dd>
     
 
@@ -2385,10 +2668,10 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
 
     
 
-    <h4 class="name" id="updateRoom"><span class="type-signature">(async) </span>updateRoom<span class="signature">(roomId<span class="signature-attributes">non-null</span>, title<span class="signature-attributes">non-null</span>, properties)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="updateParticipant"><span class="type-signature">(async) </span>updateParticipant<span class="signature">(payload<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
-    <p class="summary"><p>Update a room</p></p>
+    <p class="summary"><p>Update a participant of a room</p></p>
     
 
 
@@ -2399,7 +2682,7 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line305">line 305</a>
+        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line291">line 291</a>
     </li></ul></dd>
     
 
@@ -2459,7 +2742,11 @@ socketkit.connect();
 socketkit.on(SocketKit.Event.CONNECTED, () => {
   socketkit
     .getInstance()
-    .updateRoom(1, 'Edited title', {link: 'https://socketkit.com'})
+    .updateParticipant({
+      roomId: 1,
+      targetUniqueClientKey: 15,
+      isAllowedToPost: true
+    });
 });</code></pre>
 
 
@@ -2467,6 +2754,352 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
 
     <h5>Parameters:</h5>
     
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>payload</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters for the method</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>roomId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Room id</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>targetClientId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Target client id</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isAllowedToPost</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>PostMessage priviledge of the participant</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>properties</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Additional properties for the participant</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="updateRoom"><span class="type-signature">(async) </span>updateRoom<span class="signature">(payload<span class="signature-attributes">non-null</span>, properties<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+
+    
+    <p class="summary"><p>Update a room</p></p>
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="chat.js.html">chat.js</a>, <a href="chat.js.html#line374">line 374</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const socketkit = new SocketKit({
+  token: 'abc',
+  accountId: 1,
+  type: Socketkit.ConnectionType.CLIENT
+});
+
+socketkit.connect();
+
+socketkit.on(SocketKit.Event.CONNECTED, () => {
+  socketkit
+    .getInstance()
+    .updateRoom({
+      roomId: 1,
+      title: 'Edited title',
+      properties: {link: 'https://socketkit.com'}
+    });
+});</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>payload</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Parameters for the method</p>
+                <h6>Properties</h6>
+                
 
 <table class="params">
     <thead>
@@ -2533,6 +3166,13 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
         </tr>
 
     
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
 
         <tr>
             
@@ -2549,10 +3189,26 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Additional properties</p></td>
+            
+                <td class="default">
+                
+                    <code>{}</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>payload.properties Additional properties</p></td>
         </tr>
 
     
@@ -2610,7 +3266,7 @@ socketkit.on(SocketKit.Event.CONNECTED, () => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Mar 26 2018 14:53:37 GMT+0300 (+03) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed May 23 2018 17:36:36 GMT+0300 (+03) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

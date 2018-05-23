@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a><ul class='members'><li data-type='member'><a href="Chat.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="Chat.html#addParticipant">addParticipant</a></li><li data-type='method'><a href="Chat.html#clearTyping">clearTyping</a></li><li data-type='method'><a href="Chat.html#createRoom">createRoom</a></li><li data-type='method'><a href="Chat.html#getCurrentClient">getCurrentClient</a></li><li data-type='method'><a href="Chat.html#getMessagesByRoomId">getMessagesByRoomId</a></li><li data-type='method'><a href="Chat.html#getRoomInfo">getRoomInfo</a></li><li data-type='method'><a href="Chat.html#getRooms">getRooms</a></li><li data-type='method'><a href="Chat.html#sendMessageToRoom">sendMessageToRoom</a></li><li data-type='method'><a href="Chat.html#setTyping">setTyping</a></li><li data-type='method'><a href="Chat.html#updateRoom">updateRoom</a></li></ul></li><li><a href="Service.html">Service</a><ul class='methods'><li data-type='method'><a href="Service.html#addClient">addClient</a></li><li data-type='method'><a href="Service.html#deleteClient">deleteClient</a></li><li data-type='method'><a href="Service.html#getClient">getClient</a></li><li data-type='method'><a href="Service.html#updateClient">updateClient</a></li><li data-type='method'><a href="Service.html#upsertClient">upsertClient</a></li></ul></li><li><a href="SocketKit.html">SocketKit</a><ul class='members'><li data-type='member'><a href="SocketKit.html#.ConnectionType">ConnectionType</a></li><li data-type='member'><a href="SocketKit.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="SocketKit.html#connect">connect</a></li><li data-type='method'><a href="SocketKit.html#disconnect">disconnect</a></li><li data-type='method'><a href="SocketKit.html#getClient">getClient</a></li><li data-type='method'><a href="SocketKit.html#getInstance">getInstance</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a><ul class='members'><li data-type='member'><a href="Chat.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="Chat.html#addParticipant">addParticipant</a></li><li data-type='method'><a href="Chat.html#clearTyping">clearTyping</a></li><li data-type='method'><a href="Chat.html#createRoom">createRoom</a></li><li data-type='method'><a href="Chat.html#getCurrentClient">getCurrentClient</a></li><li data-type='method'><a href="Chat.html#getMessagesByRoomId">getMessagesByRoomId</a></li><li data-type='method'><a href="Chat.html#getRoomInfo">getRoomInfo</a></li><li data-type='method'><a href="Chat.html#getRooms">getRooms</a></li><li data-type='method'><a href="Chat.html#sendMessageToRoom">sendMessageToRoom</a></li><li data-type='method'><a href="Chat.html#setTyping">setTyping</a></li><li data-type='method'><a href="Chat.html#updateParticipant">updateParticipant</a></li><li data-type='method'><a href="Chat.html#updateRoom">updateRoom</a></li></ul></li><li><a href="Service.html">Service</a><ul class='methods'><li data-type='method'><a href="Service.html#addClient">addClient</a></li><li data-type='method'><a href="Service.html#deleteClient">deleteClient</a></li><li data-type='method'><a href="Service.html#getClient">getClient</a></li><li data-type='method'><a href="Service.html#updateClient">updateClient</a></li><li data-type='method'><a href="Service.html#upsertClient">upsertClient</a></li></ul></li><li><a href="SocketKit.html">SocketKit</a><ul class='members'><li data-type='member'><a href="SocketKit.html#.ConnectionType">ConnectionType</a></li><li data-type='member'><a href="SocketKit.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="SocketKit.html#connect">connect</a></li><li data-type='method'><a href="SocketKit.html#disconnect">disconnect</a></li><li data-type='method'><a href="SocketKit.html#getClient">getClient</a></li><li data-type='method'><a href="SocketKit.html#getInstance">getInstance</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -37,7 +37,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const LineClient = require('line-socket/client-web');
+            <pre class="prettyprint source linenums"><code>const LineClient = require('line-socket/src/client/client-web');
 const EventEmitterExtra = require('event-emitter-extra');
 
 
@@ -180,8 +180,11 @@ class Chat extends EventEmitterExtra {
   /**
    * @summary Send a message to room
    *
-   * @param  {!Number} roomId Room id
-   * @param  {!text} text Message to be sent to the room
+   * @param  {!Object} payload Parameters for the method
+   * @param  {!Number} payload.roomId Room id
+   * @param  {!text} payload.text Message to be sent to the room
+   * @param  {Object} payload.properties Message properties
+   * @param  {Array&lt;{reference: !String, type: String, name: String, size: Number, length: Number}>} payload.properties.attachments File Attachments sent with the message
    * @return {Promise}
    *
    * @example
@@ -200,14 +203,14 @@ class Chat extends EventEmitterExtra {
    *     .sendMessageToRoom(1, 'Hello world');
    * });
    */
-  async sendMessageToRoom(roomId, text) {
+  async sendMessageToRoom({roomId, text, properties} = {}) {
     if (!roomId)
       return Promise.reject(new Error(`roomId is required`));
 
     if (!text)
       return Promise.reject(new Error(`text is required`));
 
-    return this.client.send(Chat.InternalEvent.SEND_MESSAGE_TO_ROOM, {roomId, text});
+    return this.client.send(Chat.InternalEvent.SEND_MESSAGE_TO_ROOM, {roomId, text, properties});
   }
 
   /**
@@ -252,9 +255,11 @@ class Chat extends EventEmitterExtra {
   /**
    * @summary Add a participant to a room
    *
-   * @param {!Number} roomId Room id
-   * @param {!Number} targetClientId Target client id
-   * @param {Object} [properties={}] properties Additional properties for the participant
+   * @param {!Object} payload Parameters for the method
+   * @param {!Number} payload.roomId Room id
+   * @param {!Number} payload.targetUniqueClientKey Target client id
+   * @param {Boolean} payload.isAllowedToPost Optional PostMessage priviledge of the participant
+   * @param {Object} [properties={}] payload.properties Additional properties for the participant
    *
    * @return {Promise}
    *
@@ -271,25 +276,77 @@ class Chat extends EventEmitterExtra {
    * socketkit.on(SocketKit.Event.CONNECTED, () => {
    *   socketkit
    *     .getInstance()
-   *     .addParticipant(1, 15, {joinedDate: new Date()})
+   *     .addParticipant({
+   *       roomId: 1,
+   *       targetUniqueClientKey: 15,
+   *       isAllowedToPost: false,
+   *       properties: {joinedDate: new Date()}
+   *     })
    * });
    */
-  async addParticipant(roomId, targetClientId, properties = {}) {
+  async addParticipant({roomId, targetUniqueClientKey, isAllowedToPost, properties = {}} = {}) {
     if (!roomId)
       return Promise.reject(new Error(`roomId is required`));
 
-    if (!targetClientId)
-      return Promise.reject(new Error(`targetClientId is required`));
+    if (!targetUniqueClientKey)
+      return Promise.reject(new Error(`targetUniqueClientKey is required`));
 
-    return this.client.send(Chat.InternalEvent.ADD_PARTICIPANT, {roomId, targetClientId, properties});
+    const participant = {roomId, targetUniqueClientKey, isAllowedToPost, properties};
+
+    return this.client.send(Chat.InternalEvent.ADD_PARTICIPANT, participant);
+  }
+
+  /**
+   * @summary Update a participant of a room
+   *
+   * @param {!Object} payload Parameters for the method
+   * @param {!Number} payload.roomId Room id
+   * @param {!Number} payload.targetClientId Target client id
+   * @param {Boolean} payload.isAllowedToPost PostMessage priviledge of the participant
+   * @param {Object} payload.properties Additional properties for the participant
+   *
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   token: 'abc',
+   *   accountId: 1,
+   *   type: Socketkit.ConnectionType.CLIENT
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .getInstance()
+   *     .updateParticipant({
+   *       roomId: 1,
+   *       targetUniqueClientKey: 15,
+   *       isAllowedToPost: true
+   *     });
+   * });
+   */
+  async updateParticipant({roomId, targetUniqueClientKey, isAllowedToPost, properties} = {}) {
+    if (!roomId)
+      return Promise.reject(new Error(`roomId is required`));
+
+    if (!targetUniqueClientKey)
+      return Promise.reject(new Error(`targetUniqueClientKey is required`));
+
+    const participant = {roomId, targetUniqueClientKey, isAllowedToPost, properties};
+
+    return this.client.send(Chat.InternalEvent.UPDATE_PARTICIPANT, participant);
   }
 
   /**
    * @summary Create a room
    *
-   * @param  {!string}  title Title of the room
-   * @param  {Boolean} [private_=false] private_ If the room is private or not.
-   * @param  {Object}  properties Additional properties for the room
+   * @param  {!Object} payload Parameters for the method
+   * @param  {!string} payload.title Title of the room
+   * @param  {Boolean} [isPrivate=false] payload.isPrivate If the room is private or not
+   * @param  {Boolean} [allowPostsByDefault=true] payload.allowPostsByDefault Can participants post messages to room or not right away
+   * @param  {Object} [properties={}] payload.properties Additional properties for the room
    *
    * @return {Promise}
    *
@@ -306,22 +363,30 @@ class Chat extends EventEmitterExtra {
    * socketkit.on(SocketKit.Event.CONNECTED, () => {
    *   socketkit
    *     .getInstance()
-   *     .createRoom('New room', true, {link: 'https://socketkit.com'})
+   *     .createRoom({
+   *       title: 'Awesome Announcement Room',
+   *       isPrivate: true,
+   *       allowPostsByDefault: false,
+   *       properties: {awesomeLink: 'https://socketkit.com'}
+   *     });
    * });
    */
-  async createRoom(title, private_ = false, properties = {}) {
+  async createRoom({title, isPrivate = false, allowPostsByDefault = true, properties = {}} = {}) {
     if (!title)
       return Promise.reject(new Error(`title is required`));
 
-    return this.client.send(Chat.InternalEvent.CREATE_ROOM, {title, private: private_, properties});
+    const room = {title, private: isPrivate, allowPostsByDefault, properties};
+
+    return this.client.send(Chat.InternalEvent.CREATE_ROOM, room);
   }
 
   /**
    * @summary Update a room
    *
-   * @param  {!Number} roomId Room id
-   * @param  {!string} title New title of the room
-   * @param  {Object} properties Additional properties
+   * @param  {!Object} payload Parameters for the method
+   * @param  {!Number} payload.roomId Room id
+   * @param  {!string} payload.title New title of the room
+   * @param  {Object} [properties={}] payload.properties Additional properties
    *
    * @return {Promise}
    *
@@ -338,10 +403,14 @@ class Chat extends EventEmitterExtra {
    * socketkit.on(SocketKit.Event.CONNECTED, () => {
    *   socketkit
    *     .getInstance()
-   *     .updateRoom(1, 'Edited title', {link: 'https://socketkit.com'})
+   *     .updateRoom({
+   *       roomId: 1,
+   *       title: 'Edited title',
+   *       properties: {link: 'https://socketkit.com'}
+   *     });
    * });
    */
-  async updateRoom(roomId, title, properties = {}) {
+  async updateRoom({roomId, title, properties = {}} = {}) {
     if (!roomId)
       return Promise.reject(new Error(`roomId is required`));
 
@@ -369,6 +438,7 @@ Chat.InternalEvent = {
   SEND_MESSAGE_TO_ROOM: 'send_message_to_room',
   CREATE_ROOM: 'create_room',
   ADD_PARTICIPANT: 'add_participant',
+  UPDATE_PARTICIPANT: 'update_participant',
   UPDATE_ROOM: 'update_room'
 };
 
@@ -402,7 +472,7 @@ exports.Event = Chat.Event;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Mar 26 2018 14:53:37 GMT+0300 (+03) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed May 23 2018 17:36:36 GMT+0300 (+03) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
