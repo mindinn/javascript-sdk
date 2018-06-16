@@ -58,6 +58,8 @@ class RoomsController extends EventEmitterExtra {
   constructor(client) {
     super();
     this.client = client;
+
+    this.bindEvents();
   }
 
   /**
