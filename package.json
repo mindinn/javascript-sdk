@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/socketkit/javascript-sdk#readme",
   "dependencies": {
+    "babel-eslint": "8.2.3",
     "docdash": "^0.4.0",
     "eslint": "^4.18.2",
     "eslint-config-google": "^0.9.1",
