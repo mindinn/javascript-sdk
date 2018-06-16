@@ -1,10 +1,30 @@
 const EventEmitterExtra = require('event-emitter-extra');
 
+class ClientController extends EventEmitterExtra {
+  static Events = {
+    ADD_CLIENT: 'add_client',
+    UPDATE_CLIENT: 'update_client',
+    DELETE_CLIENT: 'delete_client',
+    GET_CLIENT: 'get_client',
+    GET_CURRENT_CLIENT: 'get_current_client'
+  };
 
-class Service extends EventEmitterExtra {
   /**
-   * @class Service
+   * @class ClientController
    * @param  {LineClient} client Line client
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   token: 'abc',
+   *   accountId: 1
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   const rooms = socketkit.Clients;
+   * });
    */
   constructor(client) {
     super();
@@ -12,38 +32,36 @@ class Service extends EventEmitterExtra {
   }
 
   /**
-   * @summary Bind necessary events.
-   * @private
-   * @ignore
-   */
-  bindEvents() {}
-
-  /**
    * @summary Add client
    *
-   * @param {!string} uniqueClientKey Unique client key
-   * @param {!string} token Token you wish to add to client
-   * @param {!Object} properties Additional properties for your client
+   * @param {!Object} [payload={}] payload
+   * @param {!string} payload.uniqueClientKey Unique client key
+   * @param {!string} payload.token Token you wish to add to client
+   * @param {!Object} payload.properties Additional properties for your client
    *
    * @return {Promise}
    *
    * @example
    *
    * const socketkit = new SocketKit({
+   *   accountId: 1,
    *   token: 'abc',
-   *   type: SocketKit.ConnectionType.SERVICE
    * });
    *
    * socketkit.connect();
    *
    * socketkit.on(SocketKit.Event.CONNECTED, () => {
    *   socketkit
-   *     .getInstance()
-   *     .addClient('unique-key', 'token', {})
+   *     .Clients
+   *     .create({
+   *       uniqueClientKey: 'user-1',
+   *       token: 'user-1-token',
+   *       properties: {}
+   *     })
    *     .then(client => console.log('Client', client));
    * });
    */
-  async addClient(uniqueClientKey, token, properties) {
+  create({uniqueClientKey, token, properties} = {}) {
     if (!uniqueClientKey)
       return Promise.reject(new Error(`uniqueClientKey is required`));
 
@@ -53,36 +71,40 @@ class Service extends EventEmitterExtra {
     if (!properties)
       return Promise.reject(new Error(`properties is required`));
 
-    const user = {uniqueClientKey, token, properties};
-    return this.client.send(Service.Event.ADD_CLIENT, user);
+    return this.client.send(this.Events.ADD_CLIENT, {
+      uniqueClientKey,
+      token,
+      properties
+    });
   }
 
   /**
    * @summary Insert client even if it exists
    *
    * @param {!string} uniqueClientKey Unique client key
-   * @param {!string} token Token you wish to add to client
-   * @param {!Object} properties Additional properties for your client
+   * @param {!Object} [payload={}] payload
+   * @param {!string} payload.token Token you wish to add to client
+   * @param {!Object} payload.properties Additional properties for your client
    *
    * @return {Promise}
    *
    * @example
    *
    * const socketkit = new SocketKit({
-   *   token: 'abc',
-   *   type: SocketKit.ConnectionType.SERVICE
+   *   accountId: 1,
+   *   token: 'abc'
    * });
    *
    * socketkit.connect();
    *
    * socketkit.on(SocketKit.Event.CONNECTED, () => {
    *   socketkit
-   *     .getInstance()
-   *     .upsertClient('unique-key', 'token', {})
+   *     .Clients
+   *     .upsert('unique-key', {token: 'token', properties: {}})
    *     .then(client => console.log('Client', client));
    * });
    */
-  async upsertClient(uniqueClientKey, token, properties) {
+  upsert(uniqueClientKey, {token, properties} = {}) {
     if (!uniqueClientKey)
       return Promise.reject(new Error(`uniqueClientKey is required`));
 
@@ -92,15 +114,19 @@ class Service extends EventEmitterExtra {
     if (!properties)
       return Promise.reject(new Error(`properties is required`));
 
-    const user = {uniqueClientKey, token, properties, upsert: true};
-    return this.client.send(Service.Event.ADD_CLIENT, user);
+    return this.client.send(this.Events.ADD_CLIENT, {
+      uniqueClientKey,
+      token,
+      properties,
+      upsert: true
+    });
   }
 
   /**
    * @summary Update client
    *
    * @param {!string} uniqueClientKey Unique client key
-   * @param {!Object} payload
+   * @param {!Object} [payload={}] payload
    * @param {!string} payload.token Token you wish to change
    * @param {!Object} payload.properties Additional properties for your client
    *
@@ -109,20 +135,20 @@ class Service extends EventEmitterExtra {
    * @example
    *
    * const socketkit = new SocketKit({
-   *   token: 'abc',
-   *   type: SocketKit.ConnectionType.SERVICE
+   *   accountId: 1,
+   *   token: 'abc'
    * });
    *
    * socketkit.connect();
    *
    * socketkit.on(SocketKit.Event.CONNECTED, () => {
    *   socketkit
-   *     .getInstance()
-   *     .updateClient('unique-key', {token: 'abc', properties: {}})
+   *     .Clients
+   *     .update('unique-key', {token: 'abc', properties: {}})
    *     .then(client => console.log('Client', client));
    * });
    */
-  async updateClient(uniqueClientKey, {token, properties} = {}) {
+  update(uniqueClientKey, {token, properties} = {}) {
     if (!uniqueClientKey)
       return Promise.reject(new Error(`uniqueClientKey is required`));
 
@@ -136,14 +162,12 @@ class Service extends EventEmitterExtra {
     if (properties)
       updateData.properties = properties;
 
-    return this.client.send(Service.Event.UPDATE_CLIENT, updateData);
+    return this.client.send(this.Events.UPDATE_CLIENT, updateData);
   }
 
   /**
    * @summary Delete a client
-   *
    * @param  {!string} uniqueClientKey Predefined client key
-   *
    * @return {Promise}
    *
    * @example
@@ -157,22 +181,49 @@ class Service extends EventEmitterExtra {
    *
    * socketkit.on(SocketKit.Event.CONNECTED, () => {
    *   socketkit
-   *     .getInstance()
-   *     .deleteClient('unique-key')
+   *     .Clients
+   *     .delete('unique-key')
    *     .then(client => console.log('Client', client));
    * });
    */
-  async deleteClient(uniqueClientKey) {
+  delete(uniqueClientKey) {
     if (!uniqueClientKey)
       return Promise.reject(new Error(`uniqueClientKey is required`));
 
-    return this.client.send(Service.Event.DELETE_CLIENT, {uniqueClientKey});
+    return this.client.send(this.Events.DELETE_CLIENT, {uniqueClientKey});
   }
 
   /**
    * @summary Get a client
-   *
    * @param  {!string} uniqueClientKey Predefined client key
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   accountId: 1,
+   *   token: 'abc'
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .Clients
+   *     .findByKey('unique-key')
+   *     .then(client => console.log('Client', client));
+   * });
+   */
+  findByKey(uniqueClientKey) {
+    if (!uniqueClientKey)
+      return Promise.reject(new Error(`uniqueClientKey is required`));
+
+    return this.client.send(this.Events.GET_CLIENT, {uniqueClientKey});
+  }
+
+
+  /**
+   * @summary Get current client information
    *
    * @return {Promise}
    *
@@ -180,39 +231,21 @@ class Service extends EventEmitterExtra {
    *
    * const socketkit = new SocketKit({
    *   token: 'abc',
-   *   type: SocketKit.ConnectionType.SERVICE
+   *   accountId: 1
    * });
    *
    * socketkit.connect();
    *
    * socketkit.on(SocketKit.Event.CONNECTED, () => {
    *   socketkit
-   *     .getInstance()
-   *     .getClient('unique-key')
-   *     .then(client => console.log('Client', client));
+   *     .Clients
+   *     .getCurrent()
+   *     .then(client => console.log('Current client', client));
    * });
    */
-  async getClient(uniqueClientKey) {
-    if (!uniqueClientKey)
-      return Promise.reject(new Error(`uniqueClientKey is required`));
-
-    return this.client.send(Service.Event.GET_CLIENT, {uniqueClientKey});
+  async getCurrent() {
+    return this.client.send(this.Events.GET_CURRENT_CLIENT);
   }
 }
 
-/**
- * @static
- * @readonly
- * @enum {string}
- * @private
- * @ignore
- */
-Service.Event = {
-  ADD_CLIENT: 'add_client',
-  UPDATE_CLIENT: 'update_client',
-  DELETE_CLIENT: 'delete_client',
-  GET_CLIENT: 'get_client'
-};
-
-exports.Service = Service;
-exports.Event = Service.Event;
+module.exports = ClientController;
