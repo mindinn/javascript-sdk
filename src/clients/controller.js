@@ -1,14 +1,6 @@
 const EventEmitterExtra = require('event-emitter-extra');
 
 class ClientController extends EventEmitterExtra {
-  static Events = {
-    ADD_CLIENT: 'add_client',
-    UPDATE_CLIENT: 'update_client',
-    DELETE_CLIENT: 'delete_client',
-    GET_CLIENT: 'get_client',
-    GET_CURRENT_CLIENT: 'get_current_client'
-  };
-
   /**
    * @class ClientController
    * @param  {LineClient} client Line client
@@ -247,5 +239,15 @@ class ClientController extends EventEmitterExtra {
     return this.client.send(this.Events.GET_CURRENT_CLIENT);
   }
 }
+
+
+ClientController.Events = {
+  ADD_CLIENT: 'add_client',
+  UPDATE_CLIENT: 'update_client',
+  DELETE_CLIENT: 'delete_client',
+  GET_CLIENT: 'get_client',
+  GET_CURRENT_CLIENT: 'get_current_client'
+};
+
 
 module.exports = ClientController;

@@ -2,43 +2,6 @@ const EventEmitterExtra = require('event-emitter-extra');
 
 class RoomsController extends EventEmitterExtra {
   /**
-   * @summary InternalEvents
-   * @enum {string}
-   * @type {Object}
-   * @static
-   */
-  static InternalEvents = {
-    ROOM_EVENT: 'room_event',
-    NEW_ROOM_CREATED: 'new_room_created',
-    JOINED_TO_ROOM: 'joined_to_room',
-    ROOM_UPDATED: 'room_updated',
-    GET_CLIENT_ROOMS: 'get_client_rooms',
-    GET_MESSAGES: 'get_messages',
-    SEND_MESSAGE_TO_ROOM: 'send_message_to_room',
-    CREATE_ROOM: 'create_room',
-    ADD_PARTICIPANT: 'add_participant',
-    UPDATE_PARTICIPANT: 'update_participant',
-    UPDATE_ROOM: 'update_room'
-  };
-
-  /**
-   * @summary Events
-   * @enum {string}
-   * @type {Object}
-   * @static
-   */
-  static Events = {
-    NEW_ROOM_CREATED: 'new_room_created',
-    JOINED_TO_ROOM: 'joined_to_room',
-    ROOM_UPDATED: 'room_updated',
-    MESSAGE_RECEIVED: 'message_received',
-    CLIENT_UPDATED: 'client_updated',
-    ROOM_EVENT: 'room_event',
-    GET_ROOM_INFO: 'get_room_info',
-    SET_TYPING: 'set_typing'
-  };
-
-  /**
    * @class RoomController
    * @param  {LineClient} client Line client
    *
@@ -379,5 +342,44 @@ class RoomsController extends EventEmitterExtra {
    */
   removeMemberById() {}
 }
+
+
+/**
+ * @summary InternalEvents
+ * @enum {string}
+ * @type {Object}
+ * @static
+ */
+RoomsController.InternalEvents = {
+  ROOM_EVENT: 'room_event',
+  NEW_ROOM_CREATED: 'new_room_created',
+  JOINED_TO_ROOM: 'joined_to_room',
+  ROOM_UPDATED: 'room_updated',
+  GET_CLIENT_ROOMS: 'get_client_rooms',
+  GET_MESSAGES: 'get_messages',
+  SEND_MESSAGE_TO_ROOM: 'send_message_to_room',
+  CREATE_ROOM: 'create_room',
+  ADD_PARTICIPANT: 'add_participant',
+  UPDATE_PARTICIPANT: 'update_participant',
+  UPDATE_ROOM: 'update_room'
+};
+
+
+/**
+ * @summary Events
+ * @enum {string}
+ * @type {Object}
+ * @static
+ */
+RoomsController.Events = {
+  NEW_ROOM_CREATED: 'new_room_created',
+  JOINED_TO_ROOM: 'joined_to_room',
+  ROOM_UPDATED: 'room_updated',
+  MESSAGE_RECEIVED: 'message_received',
+  CLIENT_UPDATED: 'client_updated',
+  ROOM_EVENT: 'room_event',
+  GET_ROOM_INFO: 'get_room_info',
+  SET_TYPING: 'set_typing'
+};
 
 module.exports = RoomsController;
