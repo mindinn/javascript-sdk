@@ -102,7 +102,7 @@ class SocketKit extends EventEmitterExtra {
       this.emit(SocketKit.Event.ERROR, error);
     });
 
-    this.client.on(SocketKit.LineClient.CONNECTING_ERROR, error => {
+    this.client.on(SocketKit.LineClient.Event.CONNECTING_ERROR, error => {
       this.emit(Socketkit.Event.CONNECTING_ERROR, error);
     });
   }
