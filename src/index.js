@@ -1,6 +1,7 @@
 const EventEmitterExtra = require('event-emitter-extra');
-const {Chat} = require('./chat');
-const {Service} = require('./service');
+
+const RoomController = require('./rooms/controller');
+const ClientController = require('./clients/controller');
 
 
 class SocketKit extends EventEmitterExtra {
@@ -9,14 +10,17 @@ class SocketKit extends EventEmitterExtra {
    * @extends {EventEmitterExtra}
    * @param  {!string} options.token Access token
    * @param  {!number} options.accountId Account Id
-   * @param  {!SocketKit.ConnectionType} options.type
+   * @param  {!string} options.endpoint Default endpoint for Socketkit servers
+   *
+   * @property {RoomController} Rooms Room controller
+   * @property {ClientController} Clients Client controller
    */
-  constructor({token, accountId, type} = {}) {
+  constructor({token, accountId, endpoint = 'wss://ws.socketkit.com'} = {}) {
     super();
 
     this.token = token;
     this.accountId = accountId;
-    this.type = type;
+    this.endpoint = endpoint;
 
     this.client = null;
     this.isConnected = false;
@@ -29,8 +33,7 @@ class SocketKit extends EventEmitterExtra {
    * @example
    * const instance = new SocketKit({
    *   token: 'abc',
-   *   accountId: 1,
-   *   type: SocketKit.ConnectionType.CLIENT
+   *   accountId: 1
    * });
    *
    * instance.connect();
@@ -44,27 +47,22 @@ class SocketKit extends EventEmitterExtra {
 
     const payload = {
       accountId: this.accountId,
-      token: this.token,
-      type: this.type
+      token: this.token
     };
 
-    this.client = new SocketKit.LineClient('wss://ws.socketkit.com', {handshake: {payload}});
+    this.client = new SocketKit.LineClient(this.endpoint, {handshake: {payload}});
 
     this.bindEvents();
 
-    if (this.type === SocketKit.ConnectionType.CLIENT) {
-      this.chat = new Chat(this.client);
-      this.chat.bindEvents();
-    } else if (this.type === SocketKit.ConnectionType.SERVICE) {
-      this.service = new Service(this.client);
-      this.service.bindEvents();
-    }
-
     this.client.connect();
+
+    this.Rooms = new RoomController(this.client);
+    this.Clients = new ClientController(this.client);
   }
 
   /**
    * @summary Disconnect the current client. Will trigger `SocketKit.Event.DISCONNECTED`.
+   * @return {object|null}
    *
    * @example
    * const instance = new SocketKit({
@@ -80,11 +78,11 @@ class SocketKit extends EventEmitterExtra {
    * instance.on(SocketKit.Event.DISCONNECTED, () => console.info('Disconnected'));
    */
   disconnect() {
-    if (this.client)
-      this.client.disconnect();
+    if (this.isConnected)
+      return this.client.disconnect();
   }
 
-  /**
+  /*
    * @summary Bind events connection related events.`
    * @ignore
    * @private
@@ -103,6 +101,10 @@ class SocketKit extends EventEmitterExtra {
     this.client.on(SocketKit.LineClient.Event.ERROR, error => {
       this.emit(SocketKit.Event.ERROR, error);
     });
+
+    this.client.on(SocketKit.LineClient.Event.CONNECTING_ERROR, error => {
+      this.emit(Socketkit.Event.CONNECTING_ERROR, error);
+    });
   }
 
   /**
@@ -111,20 +113,6 @@ class SocketKit extends EventEmitterExtra {
    */
   getClient() {
     return this.client;
-  }
-
-  /**
-   * @summary Return the connection instance according to connection type.
-   * @return {Service|Chat|null}
-   */
-  getInstance() {
-    if (this.type === SocketKit.ConnectionType.CLIENT)
-      return this.chat;
-
-    if (this.type === SocketKit.ConnectionType.SERVICE)
-      return this.service;
-
-    return null;
   }
 }
 
@@ -137,41 +125,18 @@ class SocketKit extends EventEmitterExtra {
  * instance.on(SocketKit.Event.CONNECTED, () => console.info('Connected'));
  * instance.on(SocketKit.Event.DISCONNECTED, () => console.info('Disconnected'));
  * instance.on(SocketKit.Event.ERROR, (error) => console.info('Error occurred', error));
+ * instance.on(SocketKit.Event.CONNECTING_ERROR, (error) => console.info('Error occurred', error));
  */
 SocketKit.Event = {
   CONNECTED: 'connected',
   DISCONNECTED: 'disconnected',
-  ERROR: 'error'
+  ERROR: 'error',
+  CONNECTING_ERROR: 'connecting_error'
 };
 
-/**
- * @static
- * @readonly
- * @enum {string}
- *
- * @example
- *
- * // Login as client
- * const client = new SocketKit({
- *   token: 'abc',
- *   type: SocketKit.ConnectionType.CLIENT
- * });
- *
- * // Login as service
- * const service = new SocketKit({
- *   token: 'abc',
- *   type: SocketKit.ConnectionType.SERVICE
- * });
- */
-SocketKit.ConnectionType = {
-  CLIENT: 'client',
-  SERVICE: 'service'
-};
+SocketKit.ChatEvent = RoomController.Events;
 
 SocketKit.LineClient = require('line-socket/src/client/client-web');
 
 exports.SocketKit = SocketKit;
-exports.ConnectionType = SocketKit.ConnectionType;
 exports.Event = SocketKit.Event;
-exports.ChatEvent = Chat.Event;
-exports.ServiceEvent = Service.Event;

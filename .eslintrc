@@ -28,5 +28,6 @@
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true
     }
-  }
+  },
+  "parser": "babel-eslint"
 }
