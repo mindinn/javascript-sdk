@@ -134,6 +134,8 @@ SocketKit.Event = {
   CONNECTING_ERROR: 'connecting_error'
 };
 
+SocketKit.ChatEvent = RoomController.Events;
+
 SocketKit.LineClient = require('line-socket/src/client/client-web');
 
 exports.SocketKit = SocketKit;
