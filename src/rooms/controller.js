@@ -31,20 +31,20 @@ class RoomsController extends EventEmitterExtra {
    * @ignore
    */
   bindEvents() {
-    this.client.on(this.InternalEvents.ROOM_EVENT, message => {
-      this.emit(this.Events.ROOM_EVENT, message.payload);
+    this.client.on(RoomsController.InternalEvents.ROOM_EVENT, message => {
+      this.emit(RoomsController.Events.ROOM_EVENT, message.payload);
     });
 
-    this.client.on(this.InternalEvents.NEW_ROOM_CREATED, message => {
-      this.emit(this.Events.NEW_ROOM_CREATED, message.payload);
+    this.client.on(RoomsController.InternalEvents.NEW_ROOM_CREATED, message => {
+      this.emit(RoomsController.Events.NEW_ROOM_CREATED, message.payload);
     });
 
-    this.client.on(this.InternalEvents.JOINED_TO_ROOM, message => {
-      this.emit(this.Events.JOINED_TO_ROOM, message.payload);
+    this.client.on(RoomsController.InternalEvents.JOINED_TO_ROOM, message => {
+      this.emit(RoomsController.Events.JOINED_TO_ROOM, message.payload);
     });
 
-    this.client.on(this.InternalEvents.ROOM_UPDATED, message => {
-      this.emit(this.Events.ROOM_UPDATED, message.payload);
+    this.client.on(RoomsController.InternalEvents.ROOM_UPDATED, message => {
+      this.emit(RoomsController.Events.ROOM_UPDATED, message.payload);
     });
   }
 
@@ -84,7 +84,7 @@ class RoomsController extends EventEmitterExtra {
     if (!title)
       return Promise.reject(new Error(`title is required`));
 
-    return this.client.send(this.InternalEvents.CREATE_ROOM, {
+    return this.client.send(RoomsController.InternalEvents.CREATE_ROOM, {
       title,
       private: isPrivate,
       allowPostsByDefault,
@@ -125,7 +125,7 @@ class RoomsController extends EventEmitterExtra {
     if (!text)
       return Promise.reject(new Error(`text is required`));
 
-    return this.client.send(this.InternalEvents.SEND_MESSAGE_TO_ROOM, {roomId, text, properties});
+    return this.client.send(RoomsController.InternalEvents.SEND_MESSAGE_TO_ROOM, {roomId, text, properties});
   }
 
   /**
@@ -137,7 +137,7 @@ class RoomsController extends EventEmitterExtra {
     if (!roomId)
       return Promise.reject(new Error(`roomId is required`));
 
-    return this.client.send(this.Events.GET_ROOM_INFO, {roomId});
+    return this.client.send(RoomsController.Events.GET_ROOM_INFO, {roomId});
   }
 
   /**
@@ -165,7 +165,7 @@ class RoomsController extends EventEmitterExtra {
    */
   findAll(options = {}) {
     return this.client
-      .send(this.InternalEvents.GET_CLIENT_ROOMS, {
+      .send(RoomsController.InternalEvents.GET_CLIENT_ROOMS, {
         pagination: options
       });
   }
@@ -199,7 +199,7 @@ class RoomsController extends EventEmitterExtra {
       return Promise.reject(new Error(`roomId is required`));
 
     return this.client
-      .send(this.InternalEvents.GET_MESSAGES, {roomId, pagination: options});
+      .send(RoomsController.InternalEvents.GET_MESSAGES, {roomId, pagination: options});
   }
 
   /**
@@ -238,7 +238,7 @@ class RoomsController extends EventEmitterExtra {
     if (!title)
       return Promise.reject(new Error(`title is required`));
 
-    return this.client.send(this.InternalEvents.UPDATE_ROOM, {roomId, title, properties});
+    return this.client.send(RoomsController.InternalEvents.UPDATE_ROOM, {roomId, title, properties});
   }
 
   /**
@@ -283,7 +283,7 @@ class RoomsController extends EventEmitterExtra {
     if (!targetUniqueClientKey)
       return Promise.reject(new Error(`targetUniqueClientKey is required`));
 
-    return this.client.send(this.InternalEvents.ADD_PARTICIPANT, {
+    return this.client.send(RoomsController.InternalEvents.ADD_PARTICIPANT, {
       roomId,
       targetUniqueClientKey,
       isAllowedToPost,
@@ -329,7 +329,7 @@ class RoomsController extends EventEmitterExtra {
     if (!targetUniqueClientKey)
       return Promise.reject(new Error(`targetUniqueClientKey is required`));
 
-    return this.client.send(this.InternalEvents.UPDATE_PARTICIPANT, {
+    return this.client.send(RoomsController.InternalEvents.UPDATE_PARTICIPANT, {
       roomId,
       targetUniqueClientKey,
       isAllowedToPost,

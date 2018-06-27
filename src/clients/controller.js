@@ -63,7 +63,7 @@ class ClientController extends EventEmitterExtra {
     if (!properties)
       return Promise.reject(new Error(`properties is required`));
 
-    return this.client.send(this.Events.ADD_CLIENT, {
+    return this.client.send(ClientController.Events.ADD_CLIENT, {
       uniqueClientKey,
       token,
       properties
@@ -106,7 +106,7 @@ class ClientController extends EventEmitterExtra {
     if (!properties)
       return Promise.reject(new Error(`properties is required`));
 
-    return this.client.send(this.Events.ADD_CLIENT, {
+    return this.client.send(ClientController.Events.ADD_CLIENT, {
       uniqueClientKey,
       token,
       properties,
@@ -154,7 +154,7 @@ class ClientController extends EventEmitterExtra {
     if (properties)
       updateData.properties = properties;
 
-    return this.client.send(this.Events.UPDATE_CLIENT, updateData);
+    return this.client.send(ClientController.Events.UPDATE_CLIENT, updateData);
   }
 
   /**
@@ -182,7 +182,7 @@ class ClientController extends EventEmitterExtra {
     if (!uniqueClientKey)
       return Promise.reject(new Error(`uniqueClientKey is required`));
 
-    return this.client.send(this.Events.DELETE_CLIENT, {uniqueClientKey});
+    return this.client.send(ClientController.Events.DELETE_CLIENT, {uniqueClientKey});
   }
 
   /**
@@ -210,7 +210,7 @@ class ClientController extends EventEmitterExtra {
     if (!uniqueClientKey)
       return Promise.reject(new Error(`uniqueClientKey is required`));
 
-    return this.client.send(this.Events.GET_CLIENT, {uniqueClientKey});
+    return this.client.send(ClientController.Events.GET_CLIENT, {uniqueClientKey});
   }
 
 
@@ -236,7 +236,7 @@ class ClientController extends EventEmitterExtra {
    * });
    */
   async getCurrent() {
-    return this.client.send(this.Events.GET_CURRENT_CLIENT);
+    return this.client.send(ClientController.Events.GET_CURRENT_CLIENT);
   }
 }
 
