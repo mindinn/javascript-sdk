@@ -25,6 +25,6 @@
     "eslint-config-google": "^0.9.1",
     "event-emitter-extra": "0.1.7",
     "jsdoc": "^3.5.5",
-    "line-socket": "1.1.0"
+    "line-socket": "1.1.1"
   }
 }
