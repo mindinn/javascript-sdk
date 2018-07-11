@@ -238,6 +238,53 @@ class ClientController extends EventEmitterExtra {
   async getCurrent() {
     return this.client.send(ClientController.Events.GET_CURRENT_CLIENT);
   }
+
+
+  /**
+   * @summary Send push notification to target clients
+   * @param  {!Object} notification Notification configuration
+   * @param  {!String} notification.title Heading of the notification
+   * @param  {!String} notification.text Text content of the notification
+   * @param  {Object} [notification.data={}] notification.data Data to be passed upon opening notification on app
+   * @param  {!Array<String>} notification.targets UniqueClientKeys of recipient clients
+   *
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   token: 'abc',
+   *   accountId: 1
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .Clients
+   *     .sendPushNotification({
+   *       title: 'Welcome',
+   *       text: 'You needed a socket connection, and socketkit brought it to you',
+   *       data: {firstNotification: true},
+   *       targets: ['John Doe', 'Jane Doe']
+   *     })
+   * });
+   */
+  async sendPushNotification(notification = {}) {
+    if (!notification.title)
+      return Promise.reject(new Error(`title is required`));
+
+    if (!notification.text)
+      return Promise.reject(new Error(`text is required`));
+
+    if (!notification.data)
+      return Promise.reject(new Error(`data is required`));
+
+    if (!notification.targets)
+      return Promise.reject(new Error(`targets is required`));
+
+    return this.client.send(ClientController.Events.SEND_PUSH_NOTIFICATION, notification);
+  }
 }
 
 
@@ -246,7 +293,8 @@ ClientController.Events = {
   UPDATE_CLIENT: 'update_client',
   DELETE_CLIENT: 'delete_client',
   GET_CLIENT: 'get_client',
-  GET_CURRENT_CLIENT: 'get_current_client'
+  GET_CURRENT_CLIENT: 'get_current_client',
+  SEND_PUSH_NOTIFICATION: 'send_push_notification',
 };
 
 
