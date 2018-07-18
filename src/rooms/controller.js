@@ -241,10 +241,35 @@ class RoomsController extends EventEmitterExtra {
     return this.client.send(RoomsController.InternalEvents.UPDATE_ROOM, {roomId, title, properties});
   }
 
+
   /**
-   * @todo Implement delete room by id functionality.
-   */
-  deleteById() {}
+     * @summary Remove a room
+     *
+     * @param  {!Number} roomId Room id
+     *
+     * @return {Promise}
+     *
+     * @example
+     *
+     * const socketkit = new SocketKit({
+     *   token: 'abc',
+     *   accountId: 1
+     * });
+     *
+     * socketkit.connect();
+     *
+     * socketkit.on(SocketKit.Event.CONNECTED, () => {
+     *   socketkit
+     *     .getInstance()
+     *     .removeRoom(1);
+     * });
+     */
+  removeById(roomId) {
+    if (!roomId)
+      return Promise.reject(new Error(`roomId is required`));
+
+    return this.client.send(RoomsController.InternalEvents.REMOVE_ROOM, {roomId});
+  }
 
   /**
    * @summary Add a participant to a room
@@ -296,7 +321,7 @@ class RoomsController extends EventEmitterExtra {
    *
    * @param {!Number} roomId Room id
    * @param {!Object} [payload={}] payload Parameters for the method
-   * @param {!Number} payload.targetClientId Target client id
+   * @param {!Number} payload.targetUniqueClientKey Target client unique key
    * @param {Boolean} payload.isAllowedToPost PostMessage priviledge of the member
    * @param {Object} payload.properties Additional properties for the member
    *
@@ -316,7 +341,7 @@ class RoomsController extends EventEmitterExtra {
    *   socketkit
    *     .Rooms
    *     .updateMemberById(1, {
-   *       targetUniqueClientKey: 15,
+   *       targetUniqueClientKey: 'fooman',
    *       isAllowedToPost: true,
    *       properties: {}
    *     });
@@ -337,10 +362,46 @@ class RoomsController extends EventEmitterExtra {
     });
   }
 
+
   /**
-   * @todo Implement remove member by id.
+   * @summary Remove member from a room
+   *
+   * @param {!Number} roomId Room id
+   * @param {!Object} [payload={}] payload Parameters for the method
+   * @param {!Number} payload.targetUniqueClientKey Target client unique key
+   *
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   token: 'abc',
+   *   accountId: 1,
+   *   type: Socketkit.ConnectionType.CLIENT
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .Rooms
+   *     .removeMemberById(1, {
+   *       targetUniqueClientKey: 'foo man',
+   *     });
+   * });
    */
-  removeMemberById() {}
+  removeMemberById(roomId, {targetUniqueClientKey} = {}) {
+    if (!roomId)
+      return Promise.reject(new Error(`roomId is required`));
+
+    if (!targetUniqueClientKey)
+      return Promise.reject(new Error(`targetUniqueClientKey is required`));
+
+    return this.client.send(RoomsController.InternalEvents.REMOVE_PARTICIPANT, {
+      roomId,
+      targetUniqueClientKey,
+    });
+  }
 }
 
 
@@ -361,6 +422,8 @@ RoomsController.InternalEvents = {
   CREATE_ROOM: 'create_room',
   ADD_PARTICIPANT: 'add_participant',
   UPDATE_PARTICIPANT: 'update_participant',
+  REMOVE_PARTICIPANT: 'remove_participant',
+  REMOVE_ROOM: 'remove_room',
   UPDATE_ROOM: 'update_room'
 };
 
