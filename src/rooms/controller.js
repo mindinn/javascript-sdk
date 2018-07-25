@@ -118,7 +118,7 @@ class RoomsController extends EventEmitterExtra {
    *     .sendMessageById(1, {text: 'Jarvis is ready.', properties: {isCool: true}});
    * });
    */
-  sendMessageById(roomId, {text, properties = {} = {}}) {
+  sendMessageById(roomId, {text, properties = {}} = {}) {
     if (!roomId)
       return Promise.reject(new Error(`roomId is required`));
 
