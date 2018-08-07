@@ -75,8 +75,8 @@ class ClientController extends EventEmitterExtra {
    *
    * @param {!string} uniqueClientKey Unique client key
    * @param {!Object} [payload={}] payload
-   * @param {!string} payload.token Token you wish to add to client
-   * @param {!Object} payload.properties Additional properties for your client
+   * @param {?string} payload.token Token you wish to add to client
+   * @param {?Object} payload.properties Additional properties for your client
    *
    * @return {Promise}
    *
@@ -99,12 +99,6 @@ class ClientController extends EventEmitterExtra {
   upsert(uniqueClientKey, {token, properties} = {}) {
     if (!uniqueClientKey)
       return Promise.reject(new Error(`uniqueClientKey is required`));
-
-    if (!token)
-      return Promise.reject(new Error(`token is required`));
-
-    if (!properties)
-      return Promise.reject(new Error(`properties is required`));
 
     return this.client.send(ClientController.Events.ADD_CLIENT, {
       uniqueClientKey,
