@@ -97,7 +97,7 @@ class RoomsController extends EventEmitterExtra {
    *
    * @param  {!Number} roomId Room id
    * @param  {!Object} [payload={}] payload Parameters for the method
-   * @param  {!string} payload.text Message to be sent to the room
+   * @param  {string} payload.text Message to be sent to the room
    * @param  {Object} payload.properties Message properties
    * @param  {Array<{reference: !String, type: String, name: String, size: Number, length: Number}>}
    *                                     payload.properties.attachments File Attachments sent with the message
@@ -121,9 +121,6 @@ class RoomsController extends EventEmitterExtra {
   sendMessageById(roomId, {text, properties = {}} = {}) {
     if (!roomId)
       return Promise.reject(new Error(`roomId is required`));
-
-    if (!text)
-      return Promise.reject(new Error(`text is required`));
 
     return this.client.send(RoomsController.InternalEvents.SEND_MESSAGE_TO_ROOM, {roomId, text, properties});
   }
