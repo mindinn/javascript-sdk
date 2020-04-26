@@ -125,6 +125,36 @@ class RoomsController extends EventEmitterExtra {
     return this.client.send(RoomsController.InternalEvents.SEND_MESSAGE_TO_ROOM, {roomId, text, properties});
   }
 
+
+  /**
+   * @summary Remove a message
+   *
+   * @param  {!Number} messageId Messaage ID
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   token: 'abc',
+   *   accountId: 1
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .Rooms
+   *     .removeMessage(1);
+   * });
+   */
+  removeMessage(messageId) {
+    if (!messageId)
+      return Promise.reject(new Error(`messageId is required`));
+    console.log('Remove message dispatch', messageId, RoomsController.InternalEvents.REMOVE_MESSAGE);
+    return this.client.send(RoomsController.InternalEvents.REMOVE_MESSAGE, {messageId});
+  }
+
+
   /**
    * @summary Gets room information by room id.
    * @param {!Number} roomId Room id.
@@ -416,6 +446,7 @@ RoomsController.InternalEvents = {
   GET_CLIENT_ROOMS: 'get_client_rooms',
   GET_MESSAGES: 'get_messages',
   SEND_MESSAGE_TO_ROOM: 'send_message_to_room',
+  REMOVE_MESSAGE: 'remove_message',
   CREATE_ROOM: 'create_room',
   ADD_PARTICIPANT: 'add_participant',
   UPDATE_PARTICIPANT: 'update_participant',
