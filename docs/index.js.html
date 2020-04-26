@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a><ul class='members'><li data-type='member'><a href="Chat.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="Chat.html#addParticipant">addParticipant</a></li><li data-type='method'><a href="Chat.html#clearTyping">clearTyping</a></li><li data-type='method'><a href="Chat.html#createRoom">createRoom</a></li><li data-type='method'><a href="Chat.html#getCurrentClient">getCurrentClient</a></li><li data-type='method'><a href="Chat.html#getMessagesByRoomId">getMessagesByRoomId</a></li><li data-type='method'><a href="Chat.html#getRoomInfo">getRoomInfo</a></li><li data-type='method'><a href="Chat.html#getRooms">getRooms</a></li><li data-type='method'><a href="Chat.html#sendMessageToRoom">sendMessageToRoom</a></li><li data-type='method'><a href="Chat.html#setTyping">setTyping</a></li><li data-type='method'><a href="Chat.html#updateParticipant">updateParticipant</a></li><li data-type='method'><a href="Chat.html#updateRoom">updateRoom</a></li></ul></li><li><a href="Service.html">Service</a><ul class='methods'><li data-type='method'><a href="Service.html#addClient">addClient</a></li><li data-type='method'><a href="Service.html#deleteClient">deleteClient</a></li><li data-type='method'><a href="Service.html#getClient">getClient</a></li><li data-type='method'><a href="Service.html#updateClient">updateClient</a></li><li data-type='method'><a href="Service.html#upsertClient">upsertClient</a></li></ul></li><li><a href="SocketKit.html">SocketKit</a><ul class='members'><li data-type='member'><a href="SocketKit.html#.ConnectionType">ConnectionType</a></li><li data-type='member'><a href="SocketKit.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="SocketKit.html#connect">connect</a></li><li data-type='method'><a href="SocketKit.html#disconnect">disconnect</a></li><li data-type='method'><a href="SocketKit.html#getClient">getClient</a></li><li data-type='method'><a href="SocketKit.html#getInstance">getInstance</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ClientController.html">ClientController</a><ul class='methods'><li data-type='method'><a href="ClientController.html#create">create</a></li><li data-type='method'><a href="ClientController.html#delete">delete</a></li><li data-type='method'><a href="ClientController.html#findByKey">findByKey</a></li><li data-type='method'><a href="ClientController.html#getCurrent">getCurrent</a></li><li data-type='method'><a href="ClientController.html#sendPushNotification">sendPushNotification</a></li><li data-type='method'><a href="ClientController.html#update">update</a></li><li data-type='method'><a href="ClientController.html#upsert">upsert</a></li></ul></li><li><a href="RoomController.html">RoomController</a></li><li><a href="SocketKit.html">SocketKit</a><ul class='members'><li data-type='member'><a href="SocketKit.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="SocketKit.html#connect">connect</a></li><li data-type='method'><a href="SocketKit.html#disconnect">disconnect</a></li><li data-type='method'><a href="SocketKit.html#getClient">getClient</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -38,8 +38,9 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>const EventEmitterExtra = require('event-emitter-extra');
-const {Chat} = require('./chat');
-const {Service} = require('./service');
+
+const RoomController = require('./rooms/controller');
+const ClientController = require('./clients/controller');
 
 
 class SocketKit extends EventEmitterExtra {
@@ -48,14 +49,17 @@ class SocketKit extends EventEmitterExtra {
    * @extends {EventEmitterExtra}
    * @param  {!string} options.token Access token
    * @param  {!number} options.accountId Account Id
-   * @param  {!SocketKit.ConnectionType} options.type
+   * @param  {!string} options.endpoint Default endpoint for Socketkit servers
+   *
+   * @property {RoomController} Rooms Room controller
+   * @property {ClientController} Clients Client controller
    */
-  constructor({token, accountId, type} = {}) {
+  constructor({token, accountId, endpoint = 'wss://ws.socketkit.com'} = {}) {
     super();
 
     this.token = token;
     this.accountId = accountId;
-    this.type = type;
+    this.endpoint = endpoint;
 
     this.client = null;
     this.isConnected = false;
@@ -68,8 +72,7 @@ class SocketKit extends EventEmitterExtra {
    * @example
    * const instance = new SocketKit({
    *   token: 'abc',
-   *   accountId: 1,
-   *   type: SocketKit.ConnectionType.CLIENT
+   *   accountId: 1
    * });
    *
    * instance.connect();
@@ -83,27 +86,22 @@ class SocketKit extends EventEmitterExtra {
 
     const payload = {
       accountId: this.accountId,
-      token: this.token,
-      type: this.type
+      token: this.token
     };
 
-    this.client = new SocketKit.LineClient('wss://ws.socketkit.com', {handshake: {payload}});
+    this.client = new SocketKit.LineClient(this.endpoint, {handshake: {payload}});
 
     this.bindEvents();
 
-    if (this.type === SocketKit.ConnectionType.CLIENT) {
-      this.chat = new Chat(this.client);
-      this.chat.bindEvents();
-    } else if (this.type === SocketKit.ConnectionType.SERVICE) {
-      this.service = new Service(this.client);
-      this.service.bindEvents();
-    }
-
     this.client.connect();
+
+    this.Rooms = new RoomController(this.client);
+    this.Clients = new ClientController(this.client);
   }
 
   /**
    * @summary Disconnect the current client. Will trigger `SocketKit.Event.DISCONNECTED`.
+   * @return {object|null}
    *
    * @example
    * const instance = new SocketKit({
@@ -119,11 +117,11 @@ class SocketKit extends EventEmitterExtra {
    * instance.on(SocketKit.Event.DISCONNECTED, () => console.info('Disconnected'));
    */
   disconnect() {
-    if (this.client)
-      this.client.disconnect();
+    if (this.isConnected)
+      return this.client.disconnect();
   }
 
-  /**
+  /*
    * @summary Bind events connection related events.`
    * @ignore
    * @private
@@ -142,6 +140,10 @@ class SocketKit extends EventEmitterExtra {
     this.client.on(SocketKit.LineClient.Event.ERROR, error => {
       this.emit(SocketKit.Event.ERROR, error);
     });
+
+    this.client.on(SocketKit.LineClient.Event.CONNECTING_ERROR, error => {
+      this.emit(SocketKit.Event.CONNECTING_ERROR, error);
+    });
   }
 
   /**
@@ -150,20 +152,6 @@ class SocketKit extends EventEmitterExtra {
    */
   getClient() {
     return this.client;
-  }
-
-  /**
-   * @summary Return the connection instance according to connection type.
-   * @return {Service|Chat|null}
-   */
-  getInstance() {
-    if (this.type === SocketKit.ConnectionType.CLIENT)
-      return this.chat;
-
-    if (this.type === SocketKit.ConnectionType.SERVICE)
-      return this.service;
-
-    return null;
   }
 }
 
@@ -176,44 +164,21 @@ class SocketKit extends EventEmitterExtra {
  * instance.on(SocketKit.Event.CONNECTED, () => console.info('Connected'));
  * instance.on(SocketKit.Event.DISCONNECTED, () => console.info('Disconnected'));
  * instance.on(SocketKit.Event.ERROR, (error) => console.info('Error occurred', error));
+ * instance.on(SocketKit.Event.CONNECTING_ERROR, (error) => console.info('Error occurred', error));
  */
 SocketKit.Event = {
   CONNECTED: 'connected',
   DISCONNECTED: 'disconnected',
-  ERROR: 'error'
+  ERROR: 'error',
+  CONNECTING_ERROR: 'connecting_error'
 };
 
-/**
- * @static
- * @readonly
- * @enum {string}
- *
- * @example
- *
- * // Login as client
- * const client = new SocketKit({
- *   token: 'abc',
- *   type: SocketKit.ConnectionType.CLIENT
- * });
- *
- * // Login as service
- * const service = new SocketKit({
- *   token: 'abc',
- *   type: SocketKit.ConnectionType.SERVICE
- * });
- */
-SocketKit.ConnectionType = {
-  CLIENT: 'client',
-  SERVICE: 'service'
-};
+SocketKit.ChatEvent = RoomController.Events;
 
 SocketKit.LineClient = require('line-socket/src/client/client-web');
 
 exports.SocketKit = SocketKit;
-exports.ConnectionType = SocketKit.ConnectionType;
 exports.Event = SocketKit.Event;
-exports.ChatEvent = Chat.Event;
-exports.ServiceEvent = Service.Event;
 </code></pre>
         </article>
     </section>
@@ -226,7 +191,7 @@ exports.ServiceEvent = Service.Event;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed May 23 2018 17:36:36 GMT+0300 (+03) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Apr 26 2020 14:55:06 GMT+0300 (+03) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

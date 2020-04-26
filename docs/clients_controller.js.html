@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>clients/controller.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ClientController.html">ClientController</a><ul class='methods'><li data-type='method'><a href="ClientController.html#create">create</a></li><li data-type='method'><a href="ClientController.html#delete">delete</a></li><li data-type='method'><a href="ClientController.html#findByKey">findByKey</a></li><li data-type='method'><a href="ClientController.html#getCurrent">getCurrent</a></li><li data-type='method'><a href="ClientController.html#sendPushNotification">sendPushNotification</a></li><li data-type='method'><a href="ClientController.html#update">update</a></li><li data-type='method'><a href="ClientController.html#upsert">upsert</a></li></ul></li><li><a href="RoomController.html">RoomController</a></li><li><a href="SocketKit.html">SocketKit</a><ul class='members'><li data-type='member'><a href="SocketKit.html#.Event">Event</a></li></ul><ul class='methods'><li data-type='method'><a href="SocketKit.html#connect">connect</a></li><li data-type='method'><a href="SocketKit.html#disconnect">disconnect</a></li><li data-type='method'><a href="SocketKit.html#getClient">getClient</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">clients/controller.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const EventEmitterExtra = require('event-emitter-extra');
+
+class ClientController extends EventEmitterExtra {
+  /**
+   * @class ClientController
+   * @param  {LineClient} client Line client
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   token: 'abc',
+   *   accountId: 1
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   const rooms = socketkit.Clients;
+   * });
+   */
+  constructor(client) {
+    super();
+    this.client = client;
+  }
+
+  /**
+   * @summary Add client
+   *
+   * @param {!Object} [payload={}] payload
+   * @param {!string} payload.uniqueClientKey Unique client key
+   * @param {!string} payload.token Token you wish to add to client
+   * @param {!Object} payload.properties Additional properties for your client
+   *
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   accountId: 1,
+   *   token: 'abc',
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .Clients
+   *     .create({
+   *       uniqueClientKey: 'user-1',
+   *       token: 'user-1-token',
+   *       properties: {}
+   *     })
+   *     .then(client => console.log('Client', client));
+   * });
+   */
+  create({uniqueClientKey, token, properties} = {}) {
+    if (!uniqueClientKey)
+      return Promise.reject(new Error(`uniqueClientKey is required`));
+
+    if (!token)
+      return Promise.reject(new Error(`token is required`));
+
+    if (!properties)
+      return Promise.reject(new Error(`properties is required`));
+
+    return this.client.send(ClientController.Events.ADD_CLIENT, {
+      uniqueClientKey,
+      token,
+      properties
+    });
+  }
+
+  /**
+   * @summary Insert client even if it exists
+   *
+   * @param {!string} uniqueClientKey Unique client key
+   * @param {!Object} [payload={}] payload
+   * @param {?string} payload.token Token you wish to add to client
+   * @param {?Object} payload.properties Additional properties for your client
+   *
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   accountId: 1,
+   *   token: 'abc'
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .Clients
+   *     .upsert('unique-key', {token: 'token', properties: {}})
+   *     .then(client => console.log('Client', client));
+   * });
+   */
+  upsert(uniqueClientKey, {token, properties} = {}) {
+    if (!uniqueClientKey)
+      return Promise.reject(new Error(`uniqueClientKey is required`));
+
+    return this.client.send(ClientController.Events.ADD_CLIENT, {
+      uniqueClientKey,
+      token,
+      properties,
+      upsert: true
+    });
+  }
+
+  /**
+   * @summary Update client
+   *
+   * @param {!string} uniqueClientKey Unique client key
+   * @param {!Object} [payload={}] payload
+   * @param {!string} payload.token Token you wish to change
+   * @param {!Object} payload.properties Additional properties for your client
+   *
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   accountId: 1,
+   *   token: 'abc'
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .Clients
+   *     .update('unique-key', {token: 'abc', properties: {}})
+   *     .then(client => console.log('Client', client));
+   * });
+   */
+  update(uniqueClientKey, {token, properties} = {}) {
+    if (!uniqueClientKey)
+      return Promise.reject(new Error(`uniqueClientKey is required`));
+
+    const updateData = {
+      uniqueClientKey
+    };
+
+    if (token)
+      updateData.token = token;
+
+    if (properties)
+      updateData.properties = properties;
+
+    return this.client.send(ClientController.Events.UPDATE_CLIENT, updateData);
+  }
+
+  /**
+   * @summary Delete a client
+   * @param  {!string} uniqueClientKey Predefined client key
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   token: 'abc',
+   *   type: SocketKit.ConnectionType.SERVICE
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .Clients
+   *     .delete('unique-key')
+   *     .then(client => console.log('Client', client));
+   * });
+   */
+  delete(uniqueClientKey) {
+    if (!uniqueClientKey)
+      return Promise.reject(new Error(`uniqueClientKey is required`));
+
+    return this.client.send(ClientController.Events.DELETE_CLIENT, {uniqueClientKey});
+  }
+
+  /**
+   * @summary Get a client
+   * @param  {!string} uniqueClientKey Predefined client key
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   accountId: 1,
+   *   token: 'abc'
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .Clients
+   *     .findByKey('unique-key')
+   *     .then(client => console.log('Client', client));
+   * });
+   */
+  findByKey(uniqueClientKey) {
+    if (!uniqueClientKey)
+      return Promise.reject(new Error(`uniqueClientKey is required`));
+
+    return this.client.send(ClientController.Events.GET_CLIENT, {uniqueClientKey});
+  }
+
+
+  /**
+   * @summary Get current client information
+   *
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   token: 'abc',
+   *   accountId: 1
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .Clients
+   *     .getCurrent()
+   *     .then(client => console.log('Current client', client));
+   * });
+   */
+  async getCurrent() {
+    return this.client.send(ClientController.Events.GET_CURRENT_CLIENT);
+  }
+
+
+  /**
+   * @summary Send push notification to target clients
+   * @param  {!Object} notification Notification configuration
+   * @param  {!String} notification.title Heading of the notification
+   * @param  {!String} notification.text Text content of the notification
+   * @param  {Object} [notification.data={}] notification.data Data to be passed upon opening notification on app
+   * @param  {!Array&lt;String>} notification.targets UniqueClientKeys of recipient clients
+   *
+   * @return {Promise}
+   *
+   * @example
+   *
+   * const socketkit = new SocketKit({
+   *   token: 'abc',
+   *   accountId: 1
+   * });
+   *
+   * socketkit.connect();
+   *
+   * socketkit.on(SocketKit.Event.CONNECTED, () => {
+   *   socketkit
+   *     .Clients
+   *     .sendPushNotification({
+   *       title: 'Welcome',
+   *       text: 'You needed a socket connection, and socketkit brought it to you',
+   *       data: {firstNotification: true},
+   *       targets: ['John Doe', 'Jane Doe']
+   *     })
+   * });
+   */
+  async sendPushNotification(notification = {}) {
+    if (!notification.title)
+      return Promise.reject(new Error(`title is required`));
+
+    if (!notification.text)
+      return Promise.reject(new Error(`text is required`));
+
+    if (!notification.data)
+      return Promise.reject(new Error(`data is required`));
+
+    if (!notification.targets)
+      return Promise.reject(new Error(`targets is required`));
+
+    return this.client.send(ClientController.Events.SEND_PUSH_NOTIFICATION, notification);
+  }
+}
+
+
+ClientController.Events = {
+  ADD_CLIENT: 'add_client',
+  UPDATE_CLIENT: 'update_client',
+  DELETE_CLIENT: 'delete_client',
+  GET_CLIENT: 'get_client',
+  GET_CURRENT_CLIENT: 'get_current_client',
+  SEND_PUSH_NOTIFICATION: 'send_push_notification',
+};
+
+
+module.exports = ClientController;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Apr 26 2020 14:55:06 GMT+0300 (+03) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
